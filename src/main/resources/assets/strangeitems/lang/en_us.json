@@ -69,6 +69,6 @@
   "tag.item.strangeitems.trackers.logs_stripped": "Can Track \"Blocks Stripped\"",
   "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\"",
 
-  "options.strangeitems.map_element_limit": "Map Tracker Display Limit",
+  "options.strangeitems.map_element_limit": "Tracker Element Limit",
   "options.strangeitems.map_element_limit.unlimited": "∞"
 }

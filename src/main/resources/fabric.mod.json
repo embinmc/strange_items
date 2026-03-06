@@ -18,9 +18,9 @@
 	"icon": "assets/strangeitems/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": ["embin.strangeitems.StrangeItems"],
-		"client": ["embin.strangeitems.client.StrangeItemsClient"],
-		"modmenu": ["embin.strangeitems.ModMenuIntegration"]
+		"main": ["embinmc.mod.strangeitems.StrangeItems"],
+		"client": ["embinmc.mod.strangeitems.client.StrangeItemsClient"],
+		"modmenu": ["embinmc.mod.strangeitems.ModMenuIntegration"]
 	},
 	"accessWidener": "strangeitems.accesswidener",
 	"mixins": [
