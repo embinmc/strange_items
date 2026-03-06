@@ -60,6 +60,7 @@ public class StrangeItemsClient implements ClientModInitializer {
                 client.setScreen(new TrackerListScreen(client.screen));
             }
         });
+        StrangeOptions.initalize();
 
         LOGGER.info("Reading config...");
         StrangeConfig.readConfig();

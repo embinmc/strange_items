@@ -37,6 +37,11 @@ dependencies {
         api "com.terraformersmc:modmenu:17.0.0-alpha.1"
     }
 
+	api files(
+			"${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0.jar",
+			"${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0-sources.jar"
+	)
+
 	implementation 'com.electronwill.night-config:json:3.6.6'
 	
 }

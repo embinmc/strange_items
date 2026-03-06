@@ -1,6 +1,7 @@
 package embin.strangeitems.tracker;
 
 import embin.strangeitems.client.StrangeItemsClient;
+import embin.strangeitems.client.StrangeOptions;
 import embin.strangeitems.client.config.StrangeConfig;
 import embin.strangeitems.util.StrangeUtil;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,13 +26,6 @@ import net.minecraft.world.item.component.CustomData;
 public class MapTracker extends Tracker {
     public String map_id;
     public String translation_prefix;
-
-    /**
-     * Maximum number of entries that can be shown for in-depth trackers.
-     * Ignored if certain conditions are met.
-     * @see StrangeUtil#isTooltipScrollInstalled()
-     */
-    public int max_maps_shown = 8;
 
     public MapTracker(String id, String translate_prefix, TagKey<Item> tag, StatFormatter stat_formatter) {
         super(id, tag);
@@ -83,7 +77,7 @@ public class MapTracker extends Tracker {
             CompoundTag nbtCompound = this.getTrackerValueNbt(stack);
             int index = 1;
             for (String key : StrangeUtil.getSortedKeys(nbtCompound)) {
-                if (index <= this.max_maps_shown || StrangeUtil.isTooltipScrollInstalled()) {
+                if (index <= StrangeOptions.mapElementLimit() || StrangeUtil.isTooltipScrollInstalled()) {
                     String translation_key = Identifier.parse(key).toLanguageKey(this.translation_prefix);
                     Component stat_text = Component.literal(this.getFormattedTrackerValueNbt(stack, key)).withStyle(ChatFormatting.YELLOW);
                     MutableComponent tooltip_text = Component.literal(key);
@@ -98,8 +92,8 @@ public class MapTracker extends Tracker {
                 }
                 index++;
             }
-            if (index > (this.max_maps_shown + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
-                tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", index - (this.max_maps_shown + 1)).withStyle(ChatFormatting.ITALIC));
+            if (index > (StrangeOptions.mapElementLimit() + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
+                tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", index - (StrangeOptions.mapElementLimit() + 1)).withStyle(ChatFormatting.ITALIC));
             }
             StrangeUtil.addItemIdToTooltip(stack, tooltip, type);
             ci.cancel();

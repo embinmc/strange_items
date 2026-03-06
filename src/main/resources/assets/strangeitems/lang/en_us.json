@@ -67,5 +67,8 @@
   "tag.item.strangeitems.trackers.time_in_lava": "Can Track \"Time Spent in Lava\"",
   "tag.item.strangeitems.trackers.distance_fallen": "Can Track \"Distance Fallen\"",
   "tag.item.strangeitems.trackers.logs_stripped": "Can Track \"Blocks Stripped\"",
-  "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\""
+  "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\"",
+
+  "options.strangeitems.map_element_limit": "Map Tracker Display Limit",
+  "options.strangeitems.map_element_limit.unlimited": "∞"
 }
