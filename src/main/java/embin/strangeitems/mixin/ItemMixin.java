@@ -1,11 +1,16 @@
 package embin.strangeitems.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import embin.strangeitems.StrangeItems;
 import embin.strangeitems.StrangeItemsComponents;
 import embin.strangeitems.StrangeRegistryKeys;
 import embin.strangeitems.client.config.StrangeConfig;
 import embin.strangeitems.tracker.*;
 import embin.strangeitems.util.StrangeUtil;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
@@ -106,6 +111,21 @@ public abstract class ItemMixin {
         ItemStack stack = (ItemStack)(Object) this;
         if (stack.isEnchanted() || !stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty()) {
             textConsumer.accept(Component.translatable("tooltip.strangeitems.enchantments").append(":").withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    @Inject(at = @At(value = "HEAD"), method = "inventoryTick")
+    public void fixTick(Level level, Entity owner, EquipmentSlot slot, CallbackInfo ci) {
+        ItemStack stack = (ItemStack)(Object) this;
+        if (stack.has(StrangeItemsComponents.COLLECTORS_ITEM)) {
+            stack.remove(StrangeItemsComponents.COLLECTORS_ITEM);
+            stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, cd -> cd.update(nbt -> nbt.putBoolean(StrangeUtil.COLLECTORS_ITEM_TAG, true)));
+            StrangeItems.LOGGER.info("Fixed collector's status of {}", stack);
+        }
+        if (stack.has(StrangeItemsComponents.HAS_ALL_TRACKERS)) {
+            stack.remove(StrangeItemsComponents.HAS_ALL_TRACKERS);
+            stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, cd -> cd.update(nbt -> nbt.putBoolean(StrangeUtil.HAS_ALL_TRACKERS_TAG, true)));
+            StrangeItems.LOGGER.info("Fixed collector's status of {}", stack);
         }
     }
 

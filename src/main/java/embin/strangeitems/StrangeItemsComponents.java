@@ -26,6 +26,7 @@ public class StrangeItemsComponents {
     /**
      * Items with this component will have every registered tracker on them and will increment them accordingly if they're capable of doing so.
      */
+    @Deprecated
     public static final DataComponentType<Unit> HAS_ALL_TRACKERS = Registry.register(
         BuiltInRegistries.DATA_COMPONENT_TYPE,
         Id.of("strangeitems:has_all_trackers"),
