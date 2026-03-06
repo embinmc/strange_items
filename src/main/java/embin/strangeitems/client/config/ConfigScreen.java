@@ -1,14 +1,15 @@
 package embin.strangeitems.client.config;
 
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+// import me.shedaniel.clothconfig2.api.ConfigBuilder;
+// import me.shedaniel.clothconfig2.api.ConfigCategory;
+// import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class ConfigScreen {
     private ConfigScreen() {}
 
+    /*
     public static ConfigBuilder configBuilder(final Screen parent) {
         final ConfigBuilder builder = ConfigBuilder.create()
             .setParentScreen(parent)
@@ -53,4 +54,5 @@ public class ConfigScreen {
         builder.setSavingRunnable(StrangeConfig::saveConfig);
         return builder;
     }
+     */
 }
