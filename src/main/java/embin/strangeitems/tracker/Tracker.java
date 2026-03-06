@@ -4,7 +4,7 @@ import embin.strangeitems.StrangeItemsComponents;
 import embin.strangeitems.StrangeRegistries;
 import embin.strangeitems.client.StrangeItemsClient;
 import embin.strangeitems.util.Id;
-import embin.strangeitems.util.TrackerUtil;
+import embin.strangeitems.util.StrangeUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -148,7 +148,7 @@ public class Tracker {
     }
 
     protected MutableComponent getNameForTooltip() {
-        if (TrackerUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
+        if (StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
             Identifier id = StrangeRegistries.TRACKER.getKey(this);
             if (id != null) {
                 return Component.literal(id.toString()).withStyle(ChatFormatting.DARK_GRAY);

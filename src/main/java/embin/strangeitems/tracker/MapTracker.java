@@ -2,7 +2,7 @@ package embin.strangeitems.tracker;
 
 import embin.strangeitems.client.StrangeItemsClient;
 import embin.strangeitems.client.config.StrangeConfig;
-import embin.strangeitems.util.TrackerUtil;
+import embin.strangeitems.util.StrangeUtil;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
@@ -29,7 +29,7 @@ public class MapTracker extends Tracker {
     /**
      * Maximum number of entries that can be shown for in-depth trackers.
      * Ignored if certain conditions are met.
-     * @see TrackerUtil#isTooltipScrollInstalled()
+     * @see StrangeUtil#isTooltipScrollInstalled()
      */
     public int max_maps_shown = 8;
 
@@ -82,15 +82,15 @@ public class MapTracker extends Tracker {
             this.appendTooltipNoSpace(stack, tooltip, type);
             CompoundTag nbtCompound = this.getTrackerValueNbt(stack);
             int index = 1;
-            for (String key : TrackerUtil.getSortedKeys(nbtCompound)) {
-                if (index <= this.max_maps_shown || TrackerUtil.isTooltipScrollInstalled()) {
+            for (String key : StrangeUtil.getSortedKeys(nbtCompound)) {
+                if (index <= this.max_maps_shown || StrangeUtil.isTooltipScrollInstalled()) {
                     String translation_key = Identifier.parse(key).toLanguageKey(this.translation_prefix);
                     Component stat_text = Component.literal(this.getFormattedTrackerValueNbt(stack, key)).withStyle(ChatFormatting.YELLOW);
                     MutableComponent tooltip_text = Component.literal(key);
-                    if (Language.getInstance().has(translation_key) && !TrackerUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
+                    if (Language.getInstance().has(translation_key) && !StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
                         tooltip_text = Component.translatable(translation_key).withStyle(ChatFormatting.GRAY);
                     }
-                    if (TrackerUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
+                    if (StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
                         tooltip_text.withStyle(ChatFormatting.DARK_GRAY);
                     }
                     tooltip_text.append(Component.literal(": ").withStyle(ChatFormatting.GRAY));
@@ -98,10 +98,10 @@ public class MapTracker extends Tracker {
                 }
                 index++;
             }
-            if (index > (this.max_maps_shown + 1) && !TrackerUtil.isTooltipScrollInstalled()) {
+            if (index > (this.max_maps_shown + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
                 tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", index - (this.max_maps_shown + 1)).withStyle(ChatFormatting.ITALIC));
             }
-            TrackerUtil.addItemIdToTooltip(stack, tooltip, type);
+            StrangeUtil.addItemIdToTooltip(stack, tooltip, type);
             ci.cancel();
         }
     }
@@ -111,7 +111,7 @@ public class MapTracker extends Tracker {
     }
 
     public boolean shouldShowTooltip(ItemStack stack) {
-        return this.stackHasTracker(stack) && TrackerUtil.isKeyDown(this.getKeybinding()) && StrangeConfig.in_depth_tracking && this.stackHasMapTracker(stack);
+        return this.stackHasTracker(stack) && StrangeUtil.isKeyDown(this.getKeybinding()) && StrangeConfig.in_depth_tracking && this.stackHasMapTracker(stack);
     }
 
     @Override

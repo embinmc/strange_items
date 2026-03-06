@@ -1,6 +1,6 @@
 package embin.strangeitems.mixin;
 
-import embin.strangeitems.StrangeItemsComponents;
+import embin.strangeitems.util.StrangeUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +22,7 @@ public class CollectorsMixin {
 			shift = At.Shift.BEFORE
 	), method = "renderSelectedItemName", locals = LocalCapture.CAPTURE_FAILHARD)
 	private void adjust_color_for_collectors(GuiGraphics context, CallbackInfo ci, MutableComponent mutableText) {
-		if (this.lastToolHighlight.has(StrangeItemsComponents.COLLECTORS_ITEM)) {
+		if (StrangeUtil.isCollectors(this.lastToolHighlight)) {
 			mutableText.withStyle(ChatFormatting.DARK_RED);
 		}
 	}

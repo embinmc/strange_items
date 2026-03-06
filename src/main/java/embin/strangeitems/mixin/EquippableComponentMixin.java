@@ -1,7 +1,7 @@
 package embin.strangeitems.mixin;
 
 import embin.strangeitems.tracker.Trackers;
-import embin.strangeitems.util.TrackerUtil;
+import embin.strangeitems.util.StrangeUtil;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ public class EquippableComponentMixin {
     @Inject(method = "swapWithEquipmentSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"))
     public void equipMixin(ItemStack stack, Player player, CallbackInfoReturnable<InteractionResult> cir) {
         Equippable ec = (Equippable) (Object) this;
-        if (TrackerUtil.canSwap(stack, player.getItemBySlot(ec.slot()), player)) {
+        if (StrangeUtil.canSwap(stack, player.getItemBySlot(ec.slot()), player)) {
             Trackers.TIMES_EQUIPPED.appendTracker(stack, 1);
         }
     }

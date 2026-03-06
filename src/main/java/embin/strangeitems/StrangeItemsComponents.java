@@ -16,6 +16,7 @@ public class StrangeItemsComponents {
     );
     */
 
+    @Deprecated
     public static final DataComponentType<Unit> COLLECTORS_ITEM = Registry.register(
         BuiltInRegistries.DATA_COMPONENT_TYPE,
         Id.of("strangeitems:collectors_item"),

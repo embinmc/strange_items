@@ -12,7 +12,7 @@ public class StrangeRegistries {
      * Registry containing all registered trackers.
      * @see Trackers
      */
-    public static final Registry<Tracker> TRACKER = FabricRegistryBuilder.createSimple(
+    public static final Registry<Tracker> TRACKER = FabricRegistryBuilder.create(
             StrangeRegistryKeys.TRACKER
     ).attribute(RegistryAttribute.OPTIONAL).buildAndRegister();
 

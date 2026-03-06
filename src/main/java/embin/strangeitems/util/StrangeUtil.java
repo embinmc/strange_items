@@ -3,12 +3,15 @@ package embin.strangeitems.util;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import embin.strangeitems.StrangeItems;
+import embin.strangeitems.StrangeItemsComponents;
 import embin.strangeitems.StrangeRegistries;
 import embin.strangeitems.StrangeRegistryKeys;
 import embin.strangeitems.client.config.StrangeConfig;
 import embin.strangeitems.mixin.KeyBindAccessor;
 import embin.strangeitems.tracker.Tracker;
 import embin.strangeitems.tracker.TrackerTags;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,7 +37,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-public class TrackerUtil {
+public class StrangeUtil {
+    public static final String COLLECTORS_ITEM_TAG  = Id.of("collectors_item").toString();
+    public static final String HAS_ALL_TRACKERS_TAG = Id.of("has_all_trackers").toString();
 
     /**
      * Gets the keys from an NBT Compound, sorted from the highest to lowest value.
@@ -124,7 +129,7 @@ public class TrackerUtil {
         textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
         HolderSet<Tracker> entryList = getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
         for (Holder<Tracker> registryEntry : entryList) {
-            if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.getItemHolder(), registryEntry)) {
+            if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(BuiltInRegistries.ITEM.wrapAsHolder(stack.getItem()), registryEntry)) {
                 registryEntry.value().appendTooltip(stack, textConsumer);
             }
         }
@@ -146,5 +151,19 @@ public class TrackerUtil {
             }
         }
         return HolderSet.direct();
+    }
+
+    public static boolean isCollectors(ItemStack itemStack) {
+        if (itemStack.has(StrangeItemsComponents.COLLECTORS_ITEM)) return true;
+        if (!itemStack.has(DataComponents.CUSTOM_DATA)) return false;
+        CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
+        return data != null && data.copyTag().getBooleanOr(COLLECTORS_ITEM_TAG, false);
+    }
+
+    public static boolean hasAllTrackers(ItemStack itemStack) {
+        if (itemStack.has(StrangeItemsComponents.HAS_ALL_TRACKERS)) return true;
+        if (!itemStack.has(DataComponents.CUSTOM_DATA)) return false;
+        CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
+        return data != null && data.copyTag().getBooleanOr(HAS_ALL_TRACKERS_TAG, false);
     }
 }

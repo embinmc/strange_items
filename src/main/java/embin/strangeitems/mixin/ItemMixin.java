@@ -2,26 +2,22 @@ package embin.strangeitems.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import embin.strangeitems.StrangeItemsComponents;
-import embin.strangeitems.StrangeRegistries;
 import embin.strangeitems.StrangeRegistryKeys;
 import embin.strangeitems.client.config.StrangeConfig;
 import embin.strangeitems.tracker.*;
-import embin.strangeitems.util.TrackerUtil;
+import embin.strangeitems.util.StrangeUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -30,8 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(ItemStack.class)
 public abstract class ItemMixin {
@@ -39,9 +33,9 @@ public abstract class ItemMixin {
         ordinal = 0, shift = At.Shift.AFTER), method = "addDetailsToTooltip", cancellable = true)
     public void appendTooltipMixin(Item.TooltipContext context, TooltipDisplay displayComponent, Player player, TooltipFlag type, Consumer<Component> list, CallbackInfo ci) {
         ItemStack stack = (ItemStack)(Object) this;
-        if (stack.is(TrackerItemTags.CAN_TRACK_STATS) || stack.has(StrangeItemsComponents.HAS_ALL_TRACKERS)) {
-            for (Holder<Tracker> registryEntry : TrackerUtil.getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.HAS_SPECIAL_TOOLTIP)) {
-                if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.getItemHolder(), registryEntry)) {
+        if (stack.is(TrackerItemTags.CAN_TRACK_STATS) || StrangeUtil.hasAllTrackers(stack)) {
+            for (Holder<Tracker> registryEntry : StrangeUtil.getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.HAS_SPECIAL_TOOLTIP)) {
+                if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.getItem().builtInRegistryHolder(), registryEntry)) {
                     if (registryEntry.value() instanceof MapTracker mapTracker) {
                         if (mapTracker.shouldShowTooltip(stack)) {
                             mapTracker.appendTooltipMap(stack, list, ci, type);
@@ -56,14 +50,14 @@ public abstract class ItemMixin {
                     }
                 }
             }
-            TrackerUtil.addAllTrackerTooltips(context, list, stack);
+            StrangeUtil.addAllTrackerTooltips(context, list, stack);
         }
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.AFTER), method = "getTooltipLines")
     public void nameColorMixin(Item.TooltipContext context, Player player, TooltipFlag type, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
         ItemStack stack = (ItemStack)(Object) this;
-        if (stack.has(StrangeItemsComponents.COLLECTORS_ITEM)) {
+        if (StrangeUtil.isCollectors(stack)) {
             list.removeLast();
             MutableComponent item_name = (MutableComponent) stack.getHoverName();
             MutableComponent name = Component.empty();
@@ -127,7 +121,7 @@ public abstract class ItemMixin {
         if (text != null) {
             return text;
         }
-        if (stack.has(StrangeItemsComponents.COLLECTORS_ITEM)) {
+        if (StrangeUtil.isCollectors(stack)) {
             return Component.translatable("tooltip.strangeitems.collectors_item.item_name", stack.getItemName());
         }
         return stack.getItemName();

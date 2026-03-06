@@ -10,7 +10,6 @@ import net.minecraft.world.item.Item;
 
 /**
  * Class containing all default registered trackers.
- * Also contains methods to register trackers.
  */
 public class Trackers {
     public static final MapTracker BLOCKS_MINED = registerMap("blocks_mined", "block", TrackerItemTags.TRACKER_BLOCKS_MINED);
@@ -44,35 +43,35 @@ public class Trackers {
     public static final Tracker TIME_IN_LAVA = register("time_in_lava", TrackerItemTags.TRACKER_TIME_IN_LAVA, StatFormatter.TIME, 1);
     public static final MapTracker TIME_IN_DIMENSIONS = registerMap("time_in_dimensions", "dimension", TrackerItemTags.TRACKER_TIME_IN_DIMENSIONS, StatFormatter.TIME);
 
-    public static Tracker register(String id) {
+    private static Tracker register(String id) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new Tracker(id, TrackerItemTags.CAN_TRACK_STATS));
     }
 
-    public static Tracker register(String id, TagKey<Item> tag) {
+    private static Tracker register(String id, TagKey<Item> tag) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new Tracker(id, tag));
     }
 
-    public static Tracker register(String id, TagKey<Item> tag, StatFormatter stat_formatter, int m) {
+    private static Tracker register(String id, TagKey<Item> tag, StatFormatter stat_formatter, int m) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new Tracker(id, tag, stat_formatter, m));
     }
 
-    public static TimestampTracker registerTimestamp(String id) {
+    private static TimestampTracker registerTimestamp(String id) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new TimestampTracker(id));
     }
 
-    public static TimestampTracker registerTimestamp(String id, TagKey<Item> tag) {
+    private static TimestampTracker registerTimestamp(String id, TagKey<Item> tag) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new TimestampTracker(id, tag));
     }
 
-    public static MapTracker registerMap(String id, String prefix) {
+    private static MapTracker registerMap(String id, String prefix) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new MapTracker(id, prefix));
     }
 
-    public static MapTracker registerMap(String id, String prefix, TagKey<Item> tag) {
+    private static MapTracker registerMap(String id, String prefix, TagKey<Item> tag) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new MapTracker(id, prefix, tag));
     }
 
-    public static MapTracker registerMap(String id, String prefix, TagKey<Item> tag, StatFormatter stat_formatter) {
+    private static MapTracker registerMap(String id, String prefix, TagKey<Item> tag, StatFormatter stat_formatter) {
         return Registry.register(StrangeRegistries.TRACKER, Id.of(id), new MapTracker(id, prefix, tag, stat_formatter));
     }
 

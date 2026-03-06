@@ -6,7 +6,7 @@ import embin.strangeitems.client.debug.TrackerListScreen;
 import embin.strangeitems.util.Id;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class StrangeItemsClient implements ClientModInitializer {
     }
 
     private static KeyMapping vanillaKeybind(String translation, int key) {
-        return KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        return KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.strangeitems." + translation,
                 InputConstants.Type.KEYSYM,
                 key,
