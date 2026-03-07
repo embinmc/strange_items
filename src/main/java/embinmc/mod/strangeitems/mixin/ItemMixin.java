@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
+import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.tracker.*;
 import embinmc.mod.strangeitems.util.StrangeUtil;
@@ -30,7 +31,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 @Mixin(ItemStack.class)
 public abstract class ItemMixin {
@@ -38,9 +38,10 @@ public abstract class ItemMixin {
         ordinal = 0, shift = At.Shift.AFTER), method = "addDetailsToTooltip", cancellable = true)
     public void appendTooltipMixin(Item.TooltipContext context, TooltipDisplay displayComponent, Player player, TooltipFlag type, Consumer<Component> list, CallbackInfo ci) {
         ItemStack stack = (ItemStack)(Object) this;
+        if (!StrangeOptions.showTrackersInTooltip()) return;
         if (stack.is(TrackerItemTags.CAN_TRACK_STATS) || StrangeUtil.hasAllTrackers(stack)) {
             for (Holder<Tracker> registryEntry : StrangeUtil.getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.HAS_SPECIAL_TOOLTIP)) {
-                if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.getItem().builtInRegistryHolder(), registryEntry)) {
+                if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
                     if (registryEntry.value() instanceof MapTracker mapTracker) {
                         if (mapTracker.shouldShowTooltip(stack)) {
                             mapTracker.appendTooltipMap(stack, list, ci, type);
@@ -105,18 +106,10 @@ public abstract class ItemMixin {
         */
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
-            ordinal = 15, shift = At.Shift.BEFORE), method = "addDetailsToTooltip")
-    public void enchantTooltipMixin(Item.TooltipContext context, TooltipDisplay displayComponent, Player player, TooltipFlag type, Consumer<Component> textConsumer, CallbackInfo ci) {
-        ItemStack stack = (ItemStack)(Object) this;
-        if (stack.isEnchanted() || !stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty()) {
-            textConsumer.accept(Component.translatable("tooltip.strangeitems.enchantments").append(":").withStyle(ChatFormatting.GRAY));
-        }
-    }
-
     @Inject(at = @At(value = "HEAD"), method = "inventoryTick")
     public void fixTick(Level level, Entity owner, EquipmentSlot slot, CallbackInfo ci) {
         ItemStack stack = (ItemStack)(Object) this;
+        if (level.isClientSide()) return;
         if (stack.has(StrangeItemsComponents.COLLECTORS_ITEM)) {
             stack.remove(StrangeItemsComponents.COLLECTORS_ITEM);
             stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, cd -> cd.update(nbt -> nbt.putBoolean(StrangeUtil.COLLECTORS_ITEM_TAG, true)));
@@ -125,7 +118,7 @@ public abstract class ItemMixin {
         if (stack.has(StrangeItemsComponents.HAS_ALL_TRACKERS)) {
             stack.remove(StrangeItemsComponents.HAS_ALL_TRACKERS);
             stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, cd -> cd.update(nbt -> nbt.putBoolean(StrangeUtil.HAS_ALL_TRACKERS_TAG, true)));
-            StrangeItems.LOGGER.info("Fixed collector's status of {}", stack);
+            StrangeItems.LOGGER.info("Fixed full tracking status of {}", stack);
         }
     }
 

@@ -129,7 +129,7 @@ public class StrangeUtil {
         textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
         HolderSet<Tracker> entryList = getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
         for (Holder<Tracker> registryEntry : entryList) {
-            if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(BuiltInRegistries.ITEM.wrapAsHolder(stack.getItem()), registryEntry)) {
+            if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
                 registryEntry.value().appendTooltip(stack, textConsumer);
             }
         }

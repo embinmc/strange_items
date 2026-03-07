@@ -17,7 +17,7 @@ public record HiddenTrackers(List<Condition> conditions) {
     );
 
     public boolean shouldShowForItem(ItemStack item, Tracker tracker) {
-        return this.shouldShowForItem(BuiltInRegistries.ITEM.wrapAsHolder(item.getItem()), StrangeRegistries.TRACKER.wrapAsHolder(tracker));
+        return this.shouldShowForItem(item.typeHolder(), StrangeRegistries.TRACKER.wrapAsHolder(tracker));
     }
 
     public boolean shouldShowForItem(Holder<Item> item, Holder<Tracker> tracker) {
