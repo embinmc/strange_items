@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 
+// TODO: rewrite all this dog shit
 public class TimestampTracker extends Tracker {
     public String map_id;
     public TimestampTracker(String id) {
@@ -51,6 +52,7 @@ public class TimestampTracker extends Tracker {
         stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, comp -> comp.update(currentnbt -> currentnbt.put(this.map_id, value)));
     }
 
+    // why does this differ from maptracker
     public void append_tooltip_map(ItemStack stack, Consumer<Component> tooltip, CallbackInfo ci, TooltipFlag type) {
         if (this.shouldTrack(stack) && should_show_tooltip(stack)) {
             this.appendTooltipNoSpace(stack, tooltip, type);
@@ -69,7 +71,7 @@ public class TimestampTracker extends Tracker {
                     tooltip.accept(Component.literal(" ").append(tooltip_text).append(stat_text));
                 }
             }
-            if (size > (StrangeOptions.mapElementLimit() + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
+            if (size >= StrangeOptions.mapElementLimit() && !StrangeUtil.isTooltipScrollInstalled()) {
                 tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", size - StrangeOptions.mapElementLimit() + 1).withStyle(ChatFormatting.ITALIC));
             }
             StrangeUtil.addItemIdToTooltip(stack, tooltip, type);
