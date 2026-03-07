@@ -7,6 +7,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.Component;
 
+import java.util.function.Supplier;
+
 public class StrangeOptions {
     static final int UNLIMITED_POINT = 51;
     private static final OptionInstance<Integer> MAP_ELEMEMT_LIMIT = new OptionInstance<>(
@@ -18,9 +20,15 @@ public class StrangeOptions {
             },
             new OptionInstance.IntRange(3, UNLIMITED_POINT, true), 8, num -> {}
     );
+    private static final OptionInstance<Boolean> SHOW_TRACKERS_IN_TOOLTIP = OptionInstance.createBoolean("options.strangeitems.show_trackers_in_tooltip", true);
+
+    private static void register(String id, Supplier<OptionInstance<?>> supplier) {
+        VanillaOptionsAPI.register(Id.of(id), OptionsMenuLocation.NONE, supplier);
+    }
 
     public static void initalize() {
-        VanillaOptionsAPI.register(Id.of("map_element_limit"), OptionsMenuLocation.NONE, StrangeOptions::mapElementLimitOption);
+        register("map_element_limit", StrangeOptions::mapElementLimitOption);
+        register("show_trackers_in_tooltip", StrangeOptions::showTrackersInTooltipOption);
     }
 
     public static OptionInstance<Integer> mapElementLimitOption() {
@@ -30,5 +38,13 @@ public class StrangeOptions {
     public static int mapElementLimit() {
         int val = StrangeOptions.MAP_ELEMEMT_LIMIT.get();
         return val >= UNLIMITED_POINT ? 999_999 : val;
+    }
+
+    public static OptionInstance<Boolean> showTrackersInTooltipOption() {
+        return StrangeOptions.SHOW_TRACKERS_IN_TOOLTIP;
+    }
+
+    public static boolean showTrackersInTooltip() {
+        return StrangeOptions.SHOW_TRACKERS_IN_TOOLTIP.get();
     }
 }
