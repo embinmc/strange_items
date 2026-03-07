@@ -4,6 +4,8 @@
   "tooltip.strangeitems.map_cutoff": "and %s more...",
   "tooltip.strangeitems.collectors_item.item_name": "Collector's %1$s",
   "tooltip.strangeitems.collectors_item": "Collector's",
+  "tooltip.strangeitems.smithing_collectors.base": "Add an item you want to turn into a \"Collector's\" variant",
+  "tooltip.strangeitems.smithing_collectors.addition": "Add a copy of the inputted item",
 
   "tracker.strangeitems.blocks_mined":"Blocks Mined",
   "tracker.strangeitems.logs_stripped":"Blocks Stripped",

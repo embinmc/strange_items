@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Consumer;
 
 @Mixin(ItemEnchantments.class)
-public abstract class EnchantmentMixin {
+public abstract class ItemEnchantmentsMixin {
 
     private @Shadow @Final Object2IntOpenHashMap<Holder<Enchantment>> enchantments;
 
