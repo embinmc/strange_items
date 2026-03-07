@@ -47,7 +47,7 @@ public class StrangeItemsClient implements ClientModInitializer {
     public static KeyMapping show_blocks_mined = vanillaKeybind("show_blocks_mined", InputConstants.KEY_Z);
     public static KeyMapping show_times_dropped = vanillaKeybind("show_times_dropped", InputConstants.KEY_RALT);
     public static KeyMapping show_mobs_killed = vanillaKeybind("show_mobs_killed", InputConstants.KEY_LALT);
-    public static KeyMapping show_time_in_dimensions = vanillaKeybind("show_time_in_dimension", InputConstants.KEY_GRAVE);
+    public static KeyMapping show_time_in_dimensions = vanillaKeybind("show_time_in_dimension", InputConstants.KEY_LALT);
     public static KeyMapping SHOW_SHOTS_HIT = vanillaKeybind("show_shots_hit", InputConstants.KEY_RSHIFT);
 
     public static KeyMapping DEBUG_LIST_TRACKERS = vanillaKeybind("debug_list_trackers", GLFW.GLFW_KEY_KP_DIVIDE);

@@ -3,7 +3,6 @@ package embinmc.mod.strangeitems.client;
 import embinmc.mod.strangeitems.util.Id;
 import embinmc.mod.optionsapi.OptionsMenuLocation;
 import embinmc.mod.optionsapi.VanillaOptionsAPI;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.Component;
 
