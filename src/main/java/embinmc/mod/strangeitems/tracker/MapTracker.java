@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 
+// TODO: rewrite all this dog shit
 public class MapTracker extends Tracker {
     private final Map<String, String> idRedirects = HashMap.newHashMap(12);
     public String map_id;

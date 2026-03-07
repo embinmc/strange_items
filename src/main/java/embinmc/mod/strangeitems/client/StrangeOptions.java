@@ -15,7 +15,7 @@ public class StrangeOptions {
             "options.strangeitems.map_element_limit", OptionInstance.noTooltip(),
             (caption, value) -> {
                 String key = "options.strangeitems.map_element_limit.unlimited";
-                Component valStr = (value >= UNLIMITED_POINT ? Component.translatable(key) : Component.literal(String.valueOf(value))).withStyle(ChatFormatting.YELLOW);
+                Component valStr = (value >= UNLIMITED_POINT ? Component.translatable(key) : Component.literal(String.valueOf(value)));
                 return caption.copy().append(": ").append(valStr);
             },
             new OptionInstance.IntRange(3, UNLIMITED_POINT, true), 8, num -> {}
@@ -37,7 +37,7 @@ public class StrangeOptions {
 
     public static int mapElementLimit() {
         int val = StrangeOptions.MAP_ELEMEMT_LIMIT.get();
-        return val >= UNLIMITED_POINT ? 999_999 : val;
+        return val >= UNLIMITED_POINT ? 512 : val;
     }
 
     public static OptionInstance<Boolean> showTrackersInTooltipOption() {

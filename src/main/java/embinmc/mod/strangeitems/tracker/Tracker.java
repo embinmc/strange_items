@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 /**
  * Base Tracker class
  */
+// TODO: rewrite all this dog shit
 public class Tracker {
     // god this code is a mess
     private static final Logger LOGGER = LoggerFactory.getLogger(Tracker.class);
