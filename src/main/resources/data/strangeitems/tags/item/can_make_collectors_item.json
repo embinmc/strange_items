@@ -1,7 +1,20 @@
 {
   "values":[
     "#strangeitems:can_track_stats",
-    "#minecraft:music_discs",
-    "#minecraft:bundles"
+    "#minecraft:bundles",
+    "#minecraft:compasses",
+    "#c:music_discs",
+    "#c:armors/horse",
+    "#c:armors/nautilus",
+    "#c:armors/wolf",
+    "#c:nether_stars",
+    "minecraft:carrot_on_a_stick",
+    "minecraft:warped_fungus_on_a_stick",
+    "minecraft:saddle",
+    "minecraft:spyglass",
+    "minecraft:shield",
+    "minecraft:heavy_core",
+    "minecraft:goat_horn",
+    "minecraft:totem_of_undying"
   ]
 }
