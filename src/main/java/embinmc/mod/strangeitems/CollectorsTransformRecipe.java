@@ -55,6 +55,7 @@ public class CollectorsTransformRecipe extends SimpleSmithingRecipe {
 
     @Override
     public boolean matches(@NonNull SmithingRecipeInput input, @NonNull Level level) {
+        // require base and addition items to be the same
         return super.matches(input, level) && input.base().getItem() == input.addition().getItem();
     }
 
