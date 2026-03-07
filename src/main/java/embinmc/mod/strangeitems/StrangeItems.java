@@ -1,8 +1,11 @@
 package embinmc.mod.strangeitems;
 
 import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.util.Id;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +26,7 @@ public class StrangeItems implements ModInitializer {
 		StrangeItemsComponents.init();
 
         SIRegisteredEvents.registerEvents();
+		Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Id.of("smithing_collectors"), CollectorsTransformRecipe.SERIALIZER);
 
 		LOGGER.info("These items... they're strange...");
 		//StrangeItems.LOGGER.info("Reading config...");

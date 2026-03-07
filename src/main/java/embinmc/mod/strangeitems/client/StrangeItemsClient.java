@@ -68,7 +68,6 @@ public class StrangeItemsClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((commandDispatcher, commandBuildContext) -> {
             commandDispatcher.register(ClientCommands.literal("strangeitems:debug_listComponents").executes(context -> {
                 FabricClientCommandSource source = context.getSource();
-                //LOGGER.info(source.getPlayer().getActiveItem().getComponents().toString());
                 source.sendFeedback(Component.literal(DataComponentMap.builder().addAll(source.getPlayer().getActiveItem().getComponents().filter(dct -> {
                     String namespace = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(dct).getNamespace();
                     return namespace.equals(StrangeItems.MOD_ID) || dct == DataComponents.CUSTOM_DATA;
