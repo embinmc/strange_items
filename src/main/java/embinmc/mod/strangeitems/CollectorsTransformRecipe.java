@@ -42,6 +42,7 @@ public class CollectorsTransformRecipe extends SimpleSmithingRecipe {
 
     @Override
     public @NonNull ItemStack assemble(SmithingRecipeInput input) {
+        // dont override "custom data" component, modify it instead
         ItemStack itemStack = new ItemStack(input.base().typeHolder(), input.base().count(), input.base().getComponentsPatch());
         itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, cd -> cd.update(nbt -> nbt.putBoolean(StrangeUtil.COLLECTORS_ITEM_TAG, true)));
         return itemStack;
