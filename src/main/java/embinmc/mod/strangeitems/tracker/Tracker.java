@@ -30,6 +30,7 @@ import java.util.function.Consumer;
  * Base Tracker class
  */
 public class Tracker {
+    // god this code is a mess
     private static final Logger LOGGER = LoggerFactory.getLogger(Tracker.class);
     public String id;
 
