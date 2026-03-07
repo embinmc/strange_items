@@ -3,6 +3,7 @@ package embinmc.mod.strangeitems.tracker;
 import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
+import embinmc.mod.strangeitems.event.TrackerEvents;
 import embinmc.mod.strangeitems.util.Id;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.minecraft.ChatFormatting;
@@ -61,10 +62,12 @@ public class Tracker {
     }
 
     public void setTrackerValueInt(ItemStack stack, int value) {
+        if (!TrackerEvents.WRITE_INT.invoker().writeInt(this, stack, value)) return;
         stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, comp -> comp.update(currentnbt -> currentnbt.putInt(this.toString(), value)));
     }
 
     public void setTrackerValueNbt(ItemStack stack, Tag value) {
+        if (!TrackerEvents.WRITE_NBT.invoker().writeNbt(this, stack, value)) return;
         stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, comp -> comp.update(currentnbt -> currentnbt.put(this.toString(), value)));
     }
 
@@ -122,8 +125,10 @@ public class Tracker {
      */
     public void appendTracker(ItemStack stack, int add_amount) {
         if (this.shouldTrack(stack)) {
-            int tracker_count = this.getTrackerValueInt(stack) + add_amount;
-            this.setTrackerValueInt(stack, tracker_count);
+            if (TrackerEvents.ON_APPEND.invoker().onAppend(this, stack, add_amount)) {
+                int tracker_count = this.getTrackerValueInt(stack) + add_amount;
+                this.setTrackerValueInt(stack, tracker_count);
+            }
         }
     }
 
