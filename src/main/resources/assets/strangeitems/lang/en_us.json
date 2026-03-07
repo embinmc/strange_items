@@ -70,5 +70,6 @@
   "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\"",
 
   "options.strangeitems.map_element_limit": "Tracker Element Limit",
-  "options.strangeitems.map_element_limit.unlimited": "∞"
+  "options.strangeitems.map_element_limit.unlimited": "∞",
+  "options.strangeitems.show_trackers_in_tooltip": "Tracker Tooltip"
 }
