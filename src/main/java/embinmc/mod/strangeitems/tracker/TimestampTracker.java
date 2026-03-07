@@ -57,7 +57,7 @@ public class TimestampTracker extends Tracker {
             int size = this.getTrackerValueInt(stack) - 1;
             for (int i = size; i >= 0; i--) {
                 String key = String.valueOf(i + 1);
-                if ((size - StrangeOptions.mapElementLimit()) <= i || StrangeUtil.isTooltipScrollInstalled()) {
+                if ((size - StrangeOptions.mapElementLimit()) < i || StrangeUtil.isTooltipScrollInstalled()) {
                     Component stat_text = Component.translatable("tooltip.strangeitems.unknown_value").withStyle(ChatFormatting.DARK_GRAY);
                     if (this.getTrackerValueNbt(stack).contains(key)) {
                         long tracker_value = this.getTrackerValueNbt(stack).getLong(key).orElse(0L);
@@ -69,8 +69,8 @@ public class TimestampTracker extends Tracker {
                     tooltip.accept(Component.literal(" ").append(tooltip_text).append(stat_text));
                 }
             }
-            if (size >= (StrangeOptions.mapElementLimit() + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
-                tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", size - StrangeOptions.mapElementLimit()).withStyle(ChatFormatting.ITALIC));
+            if (size > (StrangeOptions.mapElementLimit() + 1) && !StrangeUtil.isTooltipScrollInstalled()) {
+                tooltip.accept(Component.translatable("tooltip.strangeitems.map_cutoff", size - StrangeOptions.mapElementLimit() + 1).withStyle(ChatFormatting.ITALIC));
             }
             StrangeUtil.addItemIdToTooltip(stack, tooltip, type);
             ci.cancel();
