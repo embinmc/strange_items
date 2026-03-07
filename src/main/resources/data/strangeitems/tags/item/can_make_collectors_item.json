@@ -3,6 +3,7 @@
     "#strangeitems:can_track_stats",
     "#minecraft:bundles",
     "#minecraft:compasses",
+    "#minecraft:harnesses",
     "#c:music_discs",
     "#c:armors/horse",
     "#c:armors/nautilus",
@@ -15,6 +16,7 @@
     "minecraft:shield",
     "minecraft:heavy_core",
     "minecraft:goat_horn",
-    "minecraft:totem_of_undying"
+    "minecraft:totem_of_undying",
+    "minecraft:writable_book"
   ]
 }

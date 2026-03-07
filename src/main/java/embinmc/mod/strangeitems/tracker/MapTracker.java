@@ -1,11 +1,14 @@
 package embinmc.mod.strangeitems.tracker;
 
+import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
 import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -24,6 +27,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 
 public class MapTracker extends Tracker {
+    private final Map<String, String> idRedirects = HashMap.newHashMap(12);
     public String map_id;
     public String translation_prefix;
 
@@ -50,9 +54,15 @@ public class MapTracker extends Tracker {
         super.appendTracker(stack, 1);
         if (this.shouldTrack(stack) || this.stackHasTracker(stack)) {
             if (StrangeConfig.in_depth_tracking) {
-                int tracker_count = this.getTrackerValueNbt(stack).getInt(key).orElse(0) + 1;
+                String redirectedKey = this.idRedirects.getOrDefault(key, key);
                 CompoundTag nbt = this.getTrackerValueNbt(stack).copy();
+                boolean hasOldTag = nbt.contains(redirectedKey); // i dont know, man
+                int tracker_count = this.getTrackerValueNbt(stack).getIntOr(hasOldTag ? redirectedKey : key, 0) + 1;
                 nbt.putInt(key, tracker_count);
+                if (hasOldTag && !redirectedKey.equals(key)) {
+                    nbt.remove(redirectedKey);
+                    StrangeItems.LOGGER.info("Redirected id {} to {}", key, redirectedKey);
+                }
                 this.setTrackerValueNbt(stack, nbt);
             }
         }
@@ -128,5 +138,9 @@ public class MapTracker extends Tracker {
 
     public KeyMapping getKeybinding() {
         return TrackerKeybindings.get_map_keybind(this);
+    }
+
+    public void addIdRedirect(Identifier target, Identifier replace) {
+        this.idRedirects.put(replace.toString(), target.toString());
     }
 }
