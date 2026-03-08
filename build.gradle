@@ -42,7 +42,7 @@ dependencies {
 			"${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0-sources.jar"
 	)
 
-	include "${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0.jar"
+	// include "${rootProject.projectDir}\\deps\\vanillaoptionsapi-1.0.0.jar"
 
 	implementation 'com.electronwill.night-config:json:3.6.6'
 	
