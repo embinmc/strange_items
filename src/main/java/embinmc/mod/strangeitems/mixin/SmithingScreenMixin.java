@@ -27,8 +27,7 @@ abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
 
     @Redirect(
             method = "renderOnboardingTooltips",
-            at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"),
-            target = @Desc(value = "renderOnboardingTooltips",args={GuiGraphics.class, int.class, int.class})
+            at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V")
     )
     private void giveDescription(Optional<Component> instance, Consumer<? super Component> action) {
         if (this.hoveredSlot != null) { // check special case for if template item is an echo shard
