@@ -6,12 +6,13 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
+import org.jspecify.annotations.NonNull;
 
 public class TrackerListWidget extends ContainerObjectSelectionList<TrackerListWidget.TrackerEntry> {
 
@@ -39,19 +40,19 @@ public class TrackerListWidget extends ContainerObjectSelectionList<TrackerListW
         }
 
         @Override
-        public List<? extends NarratableEntry> narratables() {
+        public @NonNull List<? extends NarratableEntry> narratables() {
             return List.of();
         }
 
         @Override
-        public List<? extends GuiEventListener> children() {
+        public @NonNull List<? extends GuiEventListener> children() {
             return List.of();
         }
 
-        public void render(GuiGraphics context, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered) {
+        public void render(GuiGraphicsExtractor context, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered) {
             Component name = Component.translatable(tracker.getTranslationKey());
             context.fillGradient(x, y, x + entryWidth, y + entryHeight, 1615855616, -1602211792);
-            context.drawCenteredString(this.textRenderer, name, x + (entryWidth / 2), y + (entryHeight / 4) + 1, CommonColors.WHITE);
+            context.centeredText(this.textRenderer, name, x + (entryWidth / 2), y + (entryHeight / 4) + 1, CommonColors.WHITE);
             if (hovered) {
                 Component id = Component.literal(tracker.toString()).withStyle(ChatFormatting.DARK_GRAY);
                 List<Component> tooltip = List.of(name, id);
@@ -64,7 +65,7 @@ public class TrackerListWidget extends ContainerObjectSelectionList<TrackerListW
         }
 
         @Override
-        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             this.render(context, this.getContentY(), this.getX(), this.getContentWidth(), this.getContentHeight(), mouseX, mouseY, hovered);
         }
     }

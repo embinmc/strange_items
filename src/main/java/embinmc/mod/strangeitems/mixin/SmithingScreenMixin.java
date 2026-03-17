@@ -1,6 +1,5 @@
 package embinmc.mod.strangeitems.mixin;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.network.chat.Component;
@@ -11,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Optional;
@@ -26,7 +24,7 @@ abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
     }
 
     @Redirect(
-            method = "renderOnboardingTooltips",
+            method = "extractOnboardingTooltips",
             at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V")
     )
     private void giveDescription(Optional<Component> instance, Consumer<? super Component> action) {

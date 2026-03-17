@@ -1,8 +1,9 @@
 package embinmc.mod.strangeitems.client.debug;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.NonNull;
 
 public class TrackerListScreen extends Screen {
     private TrackerListWidget trackerList;
@@ -20,8 +21,8 @@ public class TrackerListScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
-        this.renderPanorama(context, deltaTicks);
+    public void extractBackground(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+        this.extractPanorama(context, deltaTicks);
     }
 
     @Override
