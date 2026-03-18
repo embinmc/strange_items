@@ -11,8 +11,8 @@
 		"StarmanMine142"
 	],
 	"contact": {
-		"sources": "https://github.com/NotEmbin/strange_items",
-		"issues": "https://github.com/NotEmbin/strange_items/issues"
+		"sources": "https://github.com/embinmc/strange_items",
+		"issues": "https://github.com/embinmc/strange_items/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/strangeitems/icon.png",
@@ -28,7 +28,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
-		"minecraft": ">=26.1-alpha.10",
+		"minecraft": ">=26.1-pre.2",
 		"java": ">=25",
 		"fabric-registry-sync-v0": "*"
 	},
