@@ -18,6 +18,18 @@ repositories {
 	// for more information about repositories.
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 dependencies {
@@ -37,10 +49,8 @@ dependencies {
         api "com.terraformersmc:modmenu:17.0.0-alpha.1"
     }
 
-	implementation files(
-			"${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0.jar",
-			"${rootProject.projectDir}/deps/vanillaoptionsapi-1.0.0-sources.jar"
-	)
+	implementation "maven.modrinth:embin-vanilla_options_api:1.1.0-fabric"
+	include "maven.modrinth:embin-vanilla_options_api:1.1.0-fabric"
 
 	// include "${rootProject.projectDir}\\deps\\vanillaoptionsapi-1.0.0.jar"
 
