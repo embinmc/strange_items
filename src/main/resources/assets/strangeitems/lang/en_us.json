@@ -4,6 +4,8 @@
   "tooltip.strangeitems.map_cutoff": "and %s more...",
   "tooltip.strangeitems.collectors_item.item_name": "Collector's %1$s",
   "tooltip.strangeitems.collectors_item": "Collector's",
+  "tooltip.strangeitems.smithing_collectors.base": "Add an item you want to turn into a \"Collector's\" variant",
+  "tooltip.strangeitems.smithing_collectors.addition": "Add a copy of the inputted item",
 
   "tracker.strangeitems.blocks_mined":"Blocks Mined",
   "tracker.strangeitems.logs_stripped":"Blocks Stripped",
@@ -67,5 +69,9 @@
   "tag.item.strangeitems.trackers.time_in_lava": "Can Track \"Time Spent in Lava\"",
   "tag.item.strangeitems.trackers.distance_fallen": "Can Track \"Distance Fallen\"",
   "tag.item.strangeitems.trackers.logs_stripped": "Can Track \"Blocks Stripped\"",
-  "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\""
+  "tag.item.strangeitems.trackers.sheep_sheared": "Can Track \"Sheep Sheared\"",
+
+  "options.strangeitems.map_element_limit": "Tracker Element Limit",
+  "options.strangeitems.map_element_limit.unlimited": "∞",
+  "options.strangeitems.show_trackers_in_tooltip": "Trackers Tooltip"
 }

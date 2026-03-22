@@ -1,4 +1,4 @@
-accessWidener	v2	named
+accessWidener	v2	official
 
 accessible    field    net/minecraft/registry/SimpleRegistry frozen Z
 accessible field net/minecraft/registry/Registries ROOT Lnet/minecraft/registry/MutableRegistry;

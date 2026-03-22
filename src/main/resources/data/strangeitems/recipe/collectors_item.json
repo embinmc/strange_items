@@ -1,0 +1,5 @@
+{
+  "type": "strangeitems:smithing_collectors",
+  "target": "#strangeitems:can_make_collectors_item",
+  "transformer": "minecraft:echo_shard"
+}

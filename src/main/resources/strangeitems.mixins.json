@@ -1,22 +1,20 @@
 {
   "required": true,
-  "package": "embin.strangeitems.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "package": "embinmc.mod.strangeitems.mixin",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AbstractArrowMixin",
     "ArmadilloMixin",
     "AxeMixin",
     "BowMixin",
     "BrushMixin",
-    "CollectorsMixin",
     "CrossbowItemMixin",
-    "EnchantmentMixin",
     "EquippableComponentMixin",
-    "ExampleMixin",
     "FishingBobberMixin",
     "FishingRodMixin",
     "FlintAndSteelMixin",
     "HoeMixin",
+    "ItemEnchantmentsMixin",
     "ItemMixin",
     "LivingEntityMixin",
     "PlayerMixin",
@@ -30,6 +28,8 @@
     "defaultRequire": 1
   },
   "client": [
-    "KeyBindAccessor"
+    "KeyBindAccessor",
+    "SmithingScreenMixin",
+    "CollectorsMixin"
   ]
 }
