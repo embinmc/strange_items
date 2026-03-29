@@ -129,6 +129,7 @@ public class StrangeUtil {
 
     public static void addAllTrackerTooltips(Item.TooltipContext context, Consumer<Component> textConsumer, ItemStack stack) {
         List<Tracker> trackersToAppend = new ArrayList<>(StrangeRegistries.TRACKER.size());
+        List<Tracker> trackersWithCount = new ArrayList<>(StrangeRegistries.TRACKER.size());
         HolderSet<Tracker> entryList = getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
         for (Holder<Tracker> registryEntry : entryList) {
             if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
@@ -137,6 +138,8 @@ public class StrangeUtil {
                 if (!StrangeOptions.showTrackerIfZero() && val == 0)
                     continue;
                 trackersToAppend.add(tracker);
+                if (val > 0)
+                    trackersWithCount.add(tracker);
             }
         }
 
@@ -147,13 +150,15 @@ public class StrangeUtil {
                     if (!StrangeOptions.showTrackerIfZero() && val == 0)
                         continue;
                     trackersToAppend.add(tracker);
+                    if (val > 0)
+                        trackersWithCount.add(tracker);
                 }
             }
         }
         if (trackersToAppend.isEmpty())
             return;
         textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
-        if (getDataVersion(stack) < StrangeItems.DATA_VERSION)
+        if (getDataVersion(stack) < StrangeItems.DATA_VERSION && !trackersWithCount.isEmpty())
             textConsumer.accept(Component.translatable("tooltip.strangeitems.old_data_version").withStyle(ChatFormatting.RED));
         for (Tracker tracker : trackersToAppend) {
             tracker.appendTooltip(stack, textConsumer);
