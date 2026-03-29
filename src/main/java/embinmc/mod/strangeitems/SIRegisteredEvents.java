@@ -1,15 +1,21 @@
 package embinmc.mod.strangeitems;
 
 import embinmc.mod.strangeitems.event.ServerPlayerEvents;
+import embinmc.mod.strangeitems.event.TrackerEvents;
 import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.util.ElytraTrackerFix;
 import embinmc.mod.strangeitems.util.Id;
+import embinmc.mod.strangeitems.util.StrangeDataFixer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public final class SIRegisteredEvents {
     public static final Identifier BLOCK_MINED = Id.of("blocks_mined_tracker");
@@ -46,6 +52,15 @@ public final class SIRegisteredEvents {
                         Trackers.TIME_SNEAKING.appendTracker(legsStack);
                     }
                 }
+                if (player.isFallFlying()) {
+                    List<EquipmentSlot> slotsWithGlider = EquipmentSlot.VALUES.stream()
+                            .filter(slot -> LivingEntity.canGlideUsing(player.getItemBySlot(slot), slot))
+                            .toList();
+                    for (EquipmentSlot equipmentSlot : slotsWithGlider) {
+                        ItemStack gliderItem = player.getItemBySlot(equipmentSlot);
+                        Trackers.TIME_FLOWN_WITH_ELYTRA.appendTracker(gliderItem);
+                    }
+                }
             }
             return InteractionResult.PASS;
         });
@@ -53,6 +68,13 @@ public final class SIRegisteredEvents {
         ServerPlayerEvents.ON_DROP_ITEM.register(PLAYER_DROP_ITEM, (player, itemStack) -> {
             Trackers.TIMES_DROPPED.appendTracker(itemStack);
             return InteractionResult.PASS;
+        });
+
+        StrangeDataFixer.register(new ElytraTrackerFix());
+
+        TrackerEvents.ON_APPEND.register(Id.of("data_fix"), (tracker, itemStack, increaseAmount) -> {
+            StrangeDataFixer.apply(itemStack);
+            return true;
         });
     }
 }

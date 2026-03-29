@@ -6,6 +6,7 @@ import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
+import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.mixin.KeyBindAccessor;
 import embinmc.mod.strangeitems.tracker.Tracker;
@@ -14,6 +15,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -126,20 +128,35 @@ public class StrangeUtil {
     }
 
     public static void addAllTrackerTooltips(Item.TooltipContext context, Consumer<Component> textConsumer, ItemStack stack) {
-        textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
+        List<Tracker> trackersToAppend = new ArrayList<>(StrangeRegistries.TRACKER.size());
         HolderSet<Tracker> entryList = getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
         for (Holder<Tracker> registryEntry : entryList) {
             if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
-                registryEntry.value().appendTooltip(stack, textConsumer);
+                Tracker tracker = registryEntry.value();
+                int val = tracker.getTrackerValueInt(stack);
+                if (!StrangeOptions.showTrackerIfZero() && val == 0)
+                    continue;
+                trackersToAppend.add(tracker);
             }
         }
 
         for (Tracker tracker : getListOfTrackers()) {
             if (!entryList.contains(StrangeRegistries.TRACKER.wrapAsHolder(tracker))) {
                 if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack, tracker)) {
-                    tracker.appendTooltip(stack, textConsumer);
+                    int val = tracker.getTrackerValueInt(stack);
+                    if (!StrangeOptions.showTrackerIfZero() && val == 0)
+                        continue;
+                    trackersToAppend.add(tracker);
                 }
             }
+        }
+        if (trackersToAppend.isEmpty())
+            return;
+        textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
+        if (getDataVersion(stack) < StrangeItems.DATA_VERSION)
+            textConsumer.accept(Component.translatable("tooltip.strangeitems.old_data_version").withStyle(ChatFormatting.RED));
+        for (Tracker tracker : trackersToAppend) {
+            tracker.appendTooltip(stack, textConsumer);
         }
     }
 
@@ -165,5 +182,9 @@ public class StrangeUtil {
         if (!itemStack.has(DataComponents.CUSTOM_DATA)) return false;
         CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
         return data != null && data.copyTag().getBooleanOr(HAS_ALL_TRACKERS_TAG, false);
+    }
+
+    public static int getDataVersion(ItemStack itemStack) {
+        return itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getIntOr("strangeitems:data_version", 0);
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item;
  */
 public class Trackers {
     public static final MapTracker BLOCKS_MINED = registerMap("blocks_mined", "block", TrackerItemTags.TRACKER_BLOCKS_MINED);
-    public static final Tracker TIME_FLOWN_WITH_ELYTRA = register("time_flown_with_elytra", TrackerItemTags.TRACKER_TIME_FLOWN, StatFormatter.TIME, 20);
+    public static final Tracker TIME_FLOWN_WITH_ELYTRA = register("time_flown_with_elytra", TrackerItemTags.TRACKER_TIME_FLOWN, StatFormatter.TIME, 1);
     public static final TimestampTracker TIMES_DROPPED = registerTimestamp("times_dropped");
     public static final Tracker MOBS_HIT = register("mobs_hit");
     public static final Tracker LOGS_STRIPPED = register("logs_stripped", TrackerItemTags.TRACKER_LOGS_STRIPPED);

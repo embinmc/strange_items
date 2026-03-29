@@ -16,7 +16,6 @@
     "HoeMixin",
     "ItemEnchantmentsMixin",
     "ItemMixin",
-    "LivingEntityMixin",
     "PlayerMixin",
     "ServerPlayerMixin",
     "ShearsMixin",

@@ -19,8 +19,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": ["embinmc.mod.strangeitems.StrangeItems"],
-		"client": ["embinmc.mod.strangeitems.client.StrangeItemsClient"],
-		"modmenu": ["embinmc.mod.strangeitems.ModMenuIntegration"]
+		"client": ["embinmc.mod.strangeitems.client.StrangeItemsClient"]
 	},
 	"accessWidener": "strangeitems.accesswidener",
 	"mixins": [

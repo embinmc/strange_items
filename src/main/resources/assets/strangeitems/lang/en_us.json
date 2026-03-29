@@ -6,6 +6,7 @@
   "tooltip.strangeitems.collectors_item": "Collector's",
   "tooltip.strangeitems.smithing_collectors.base": "Add an item you want to turn into a \"Collector's\" variant",
   "tooltip.strangeitems.smithing_collectors.addition": "Add a copy of the inputted item",
+  "tooltip.strangeitems.old_data_version": "Displayed stats may be inaccurate until one is incremented",
 
   "tracker.strangeitems.blocks_mined":"Blocks Mined",
   "tracker.strangeitems.logs_stripped":"Blocks Stripped",
@@ -73,5 +74,6 @@
 
   "options.strangeitems.map_element_limit": "Tracker Element Limit",
   "options.strangeitems.map_element_limit.unlimited": "∞",
-  "options.strangeitems.show_trackers_in_tooltip": "Trackers Tooltip"
+  "options.strangeitems.show_trackers_in_tooltip": "Trackers Tooltip",
+  "options.strangeitems.show_tracker_if_zero": "Show Tracker If Empty"
 }
