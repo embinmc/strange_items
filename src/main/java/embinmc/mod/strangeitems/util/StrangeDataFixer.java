@@ -33,8 +33,25 @@ public interface StrangeDataFixer {
             return itemStack;
         if (!(itemStack.is(TrackerItemTags.CAN_TRACK_STATS) || StrangeUtil.hasAllTrackers(itemStack)))
             return itemStack;
+
+        boolean hadCustomDataBefore = itemStack.has(DataComponents.CUSTOM_DATA);
+        if (!hadCustomDataBefore) {
+            CompoundTag newTag = new CompoundTag();
+            newTag.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
+            itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(newTag));
+            return itemStack;
+        }
+
+        boolean hadStrangeItemsDataBefore = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).toString().contains(StrangeItems.MOD_ID);
+        if (!hadStrangeItemsDataBefore) {
+            CustomData.update(DataComponents.CUSTOM_DATA, itemStack, compoundTag -> {
+                compoundTag.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
+            });
+            return itemStack;
+        }
+
         CompoundTag tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-        int dv = tag.getIntOr("strangeitems:data_version", 0);
+        int dv = tag.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
         if (dv >= StrangeItems.DATA_VERSION)
             return itemStack;
         for (Tracker tracker : StrangeRegistries.TRACKER) {
@@ -65,7 +82,7 @@ public interface StrangeDataFixer {
                 tag.merge(fixingTag);
             }
         }
-        tag.putInt("strangeitems:data_version", StrangeItems.DATA_VERSION);
+        tag.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
         itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         LOGGER.info("Fixed data on item stack \"{}\", from version {} to {}", itemStack, dv, StrangeItems.DATA_VERSION);
         return itemStack;

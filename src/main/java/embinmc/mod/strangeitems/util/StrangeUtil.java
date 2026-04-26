@@ -42,6 +42,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class StrangeUtil {
     public static final String COLLECTORS_ITEM_TAG  = Id.of("collectors_item").toString();
     public static final String HAS_ALL_TRACKERS_TAG = Id.of("has_all_trackers").toString();
+    public static final String DATA_VERSION_TAG = Id.of("data_version").toString();
 
     /**
      * Gets the keys from an NBT Compound, sorted from the highest to lowest value.
