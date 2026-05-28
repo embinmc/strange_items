@@ -71,7 +71,7 @@ public class StrangeItemsClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(Id.of("debug_list_trackers"), client -> {
             while (DEBUG_LIST_TRACKERS.consumeClick()) {
-                client.setScreen(new TrackerListScreen(client.screen));
+                client.setScreenAndShow(new TrackerListScreen(client.gui.screen()));
             }
         });
         StrangeOptions.initalize();

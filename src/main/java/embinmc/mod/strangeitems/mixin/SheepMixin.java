@@ -14,9 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Sheep.class)
 public abstract class SheepMixin {
-    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"),
-    locals = LocalCapture.CAPTURE_FAILHARD)
-    public void sheepShear(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir, ItemStack itemStack) {
-        Trackers.SHEEP_SHEARED.appendTracker(itemStack);
+    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
+    public void sheepShear(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        Trackers.SHEEP_SHEARED.appendTracker(player.getItemInHand(hand));
     }
 }

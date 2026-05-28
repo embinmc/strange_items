@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ShearsItem.class)
 public abstract class ShearsMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"),
-        method = "useOn", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void shearMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level world, BlockPos blockPos, BlockState blockState, Block block, GrowingPlantHeadBlock abstractPlantStemBlock, Player playerEntity, ItemStack itemStack, BlockState blockState2) {
-        Trackers.PLANTS_TRIMMED.appendTracker(itemStack);
+        method = "useOn")
+    public void shearMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+        Trackers.PLANTS_TRIMMED.appendTracker(context.getItemInHand());
     }
 }

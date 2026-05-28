@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class AxeMixin {
     @Inject(at = @At(value = "INVOKE",
         target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"),
-        locals = LocalCapture.CAPTURE_FAILHARD,
         method = "useOn")
     public void blockStripMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         Trackers.LOGS_STRIPPED.appendTracker(context.getItemInHand());

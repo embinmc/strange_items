@@ -1,5 +1,6 @@
 package embinmc.mod.strangeitems.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import embinmc.mod.strangeitems.tracker.Trackers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,9 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Armadillo.class)
 public class ArmadilloMixin {
-    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"),
-        locals = LocalCapture.CAPTURE_FAILHARD)
-    public void armadilloBrush(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir, ItemStack itemStack) {
+    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
+    public void armadilloBrush(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "itemStack") ItemStack itemStack) {
         Trackers.ARMADILLOS_BRUSHED.appendTracker(itemStack);
     }
 }
