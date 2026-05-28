@@ -5,18 +5,18 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
-public class TrackerListScreen extends Screen {
-    private TrackerListWidget trackerList;
+public class TrackerDebugListScreen extends Screen {
+    private TrackerDebugListWidget trackerList;
     private final Screen parent;
 
-    public TrackerListScreen(Screen parent) {
+    public TrackerDebugListScreen(Screen parent) {
         super(Component.literal("Debug: Registered Trackers"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        this.trackerList = new TrackerListWidget(this.minecraft, this);
+        this.trackerList = new TrackerDebugListWidget(this.minecraft, this);
         this.addRenderableWidget(this.trackerList);
     }
 

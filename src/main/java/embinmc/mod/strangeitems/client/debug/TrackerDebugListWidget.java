@@ -14,9 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import org.jspecify.annotations.NonNull;
 
-public class TrackerListWidget extends ContainerObjectSelectionList<TrackerListWidget.TrackerEntry> {
+public class TrackerDebugListWidget extends ContainerObjectSelectionList<TrackerDebugListWidget.TrackerEntry> {
 
-    public TrackerListWidget(Minecraft minecraftClient, TrackerListScreen screen) {
+    public TrackerDebugListWidget(Minecraft minecraftClient, TrackerDebugListScreen screen) {
         super(minecraftClient, screen.width, screen.height - 67, 16, 24);
         for (Tracker tracker : StrangeRegistries.TRACKER) {
             this.addEntry(new TrackerEntry(tracker));
@@ -28,13 +28,13 @@ public class TrackerListWidget extends ContainerObjectSelectionList<TrackerListW
         return 200;
     }
 
-    public class TrackerEntry extends ContainerObjectSelectionList.Entry<TrackerListWidget.TrackerEntry> {
+    public class TrackerEntry extends ContainerObjectSelectionList.Entry<TrackerDebugListWidget.TrackerEntry> {
         public final Tracker tracker;
         public final Font textRenderer;
 
         TrackerEntry(Tracker tracker) {
             this.tracker = tracker;
-            this.textRenderer = TrackerListWidget.this.minecraft.font;
+            this.textRenderer = TrackerDebugListWidget.this.minecraft.font;
             this.setWidth(150);
             this.setHeight(50);
         }
