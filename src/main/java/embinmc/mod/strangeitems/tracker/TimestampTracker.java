@@ -53,7 +53,7 @@ public class TimestampTracker extends MapLikeTracker {
         for (String key : mapNbt.keySet()) {
             long second = mapNbt.getLongOr(key, 0L);
             Component timestamp = Component.literal(DATE_FORMAT.format(Date.from(Instant.ofEpochSecond(second)))).withStyle(ChatFormatting.GRAY);
-            consumer.accept(Component.literal(" " + key + ": ").withStyle(ChatFormatting.YELLOW).append(timestamp));
+            consumer.accept(Component.literal("   " + key + ": ").withStyle(ChatFormatting.YELLOW).append(timestamp));
         }
     }
 

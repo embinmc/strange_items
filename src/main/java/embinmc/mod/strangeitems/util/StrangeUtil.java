@@ -136,44 +136,6 @@ public class StrangeUtil {
         return StrangeRegistries.TRACKER.keySet().stream().toList();
     }
 
-    public static void addAllTrackerTooltips(Item.TooltipContext context, Consumer<Component> textConsumer, ItemStack stack) {
-        List<LegacyTracker> trackersToAppend = new ArrayList<>(StrangeRegistries.TRACKER.size());
-        List<LegacyTracker> trackersWithCount = new ArrayList<>(StrangeRegistries.TRACKER.size());
-        HolderSet<LegacyTracker> entryList = HolderSet.direct(); //getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
-        for (Holder<LegacyTracker> registryEntry : entryList) {
-            if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
-                LegacyTracker tracker = registryEntry.value();
-                int val = tracker.getTrackerValueInt(stack);
-                if (!StrangeOptions.showTrackerIfZero() && val == 0)
-                    continue;
-                trackersToAppend.add(tracker);
-                if (val > 0)
-                    trackersWithCount.add(tracker);
-            }
-        }
-
-        for (LegacyTracker tracker : getListOfTrackers()) {
-            if (!entryList.contains(StrangeRegistries.TRACKER.wrapAsHolder(tracker))) {
-                if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack, tracker)) {
-                    int val = tracker.getTrackerValueInt(stack);
-                    if (!StrangeOptions.showTrackerIfZero() && val == 0)
-                        continue;
-                    trackersToAppend.add(tracker);
-                    if (val > 0)
-                        trackersWithCount.add(tracker);
-                }
-            }
-        }
-        if (trackersToAppend.isEmpty())
-            return;
-        textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
-        if (getDataVersion(stack) < StrangeItems.DATA_VERSION && !trackersWithCount.isEmpty())
-            textConsumer.accept(Component.translatable("tooltip.strangeitems.old_data_version").withStyle(ChatFormatting.RED));
-        for (LegacyTracker tracker : trackersToAppend) {
-            tracker.appendTooltip(stack, textConsumer);
-        }
-    }
-
     public static HolderSet<Tracker> getTooltipOrder(HolderLookup.@Nullable Provider registries, TagKey<Tracker> tag) {
         if (registries != null) {
             Optional<HolderSet.Named<Tracker>> optional = registries.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW).get(tag);

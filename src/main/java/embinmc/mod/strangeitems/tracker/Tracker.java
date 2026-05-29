@@ -66,11 +66,10 @@ public abstract class Tracker {
 
     @Environment(EnvType.CLIENT)
     public List<Component> getTooltip(final HolderLookup.@Nullable Provider provider, final ItemStack itemStack) {
-
         CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag nbt = customData.copyTag();
-        if (!nbt.contains(this.saveId.toString()))
-            return List.of();
+        //if (!nbt.contains(this.saveId.toString()))
+        //    return List.of();
         int value = nbt.getIntOr(this.saveId.toString(), 0);
         MutableComponent formattedValue = Component.literal(this.getFormattedValue(value)).withStyle(ChatFormatting.YELLOW);
         MutableComponent desc;

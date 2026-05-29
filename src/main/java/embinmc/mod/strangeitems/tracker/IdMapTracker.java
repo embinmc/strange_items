@@ -66,7 +66,7 @@ public class IdMapTracker extends MapLikeTracker {
             MutableComponent keyText = this.translationPrefix.isEmpty() ? Component.literal(key) :
                     Component.literal(this.getTranslationKey(key));
             Component value = Component.literal(this.getFormattedValue(mapNbt.getIntOr(key, 0))).withStyle(ChatFormatting.YELLOW);
-            consumer.accept(Component.literal(" ").withStyle(ChatFormatting.GRAY).append(keyText).append(": ").append(value));
+            consumer.accept(Component.literal("   ").withStyle(ChatFormatting.GRAY).append(keyText).append(": ").append(value));
         }
     }
 
