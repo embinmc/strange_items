@@ -79,6 +79,20 @@ public class TrackerDataProvider extends FabricDynamicRegistryProvider {
         );
     }
 
+    private static void registerIdMap(BootstrapContext<Tracker> context, ResourceKey<Tracker> key, Trigger trigger, StatFormatter statFormatter, TagKey<Item> itemTag) {
+        HolderGetter<Item> items = context.lookup(Registries.ITEM);
+        Identifier trackerId = key.identifier();
+        context.register(key, new IdMapTracker(
+                        trigger,
+                        Component.translatable("tracker." + trackerId.getNamespace() + "." + trackerId.getPath()
+                                .replace('/', '.')).withStyle(ChatFormatting.GRAY),
+                        Optional.empty(), statFormatter, trackerId, items.getOrThrow(itemTag),
+                        Identifier.fromNamespaceAndPath(trackerId.getNamespace(), trackerId.getPath() + "_map"),
+                        Optional.empty()
+                )
+        );
+    }
+
     public static void bootstrap(BootstrapContext<Tracker> c) {
         registerIdMap(c, Trackers.BLOCKS_MINED, Trigger.BLOCK_MINED, StatFormatters.DEFAULT, TrackerItemTags.TRACKER_BLOCKS_MINED, "block");
         registerBasic(c, Trackers.TIME_FLOWN_WITH_ELYTRA, Trigger.TICK_GLIDING, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_FLOWN);
@@ -100,11 +114,11 @@ public class TrackerDataProvider extends FabricDynamicRegistryProvider {
         registerBasic(c, Trackers.ARMADILLOS_BRUSHED, Trigger.BRUSH_ARMADILLO, TrackerItemTags.TRACKER_ARMADILLOS_BRUSHED);
         registerIdMap(c, Trackers.MOBS_KILLED, Trigger.KILL_MOB, StatFormatters.DEFAULT, TrackerItemTags.TRACKER_MOBS_KILLED, "entity");
         registerBasic(c, Trackers.FISH_CAUGHT, Trigger.CATCH_FISH_WITH_FISHING_ROD, TrackerItemTags.TRACKER_FISHING_ROD);
-        registerIdMap(c, Trackers.DAMAGE_TAKEN, Trigger.TAKE_DAMAGE, StatFormatter.DIVIDE_BY_TEN, TrackerItemTags.TRACKER_DAMAGE_TAKEN, "damage_type");
+        registerIdMap(c, Trackers.DAMAGE_TAKEN, Trigger.TAKE_DAMAGE, StatFormatters.DIVIDE_BY_TEN, TrackerItemTags.TRACKER_DAMAGE_TAKEN);
         registerBasic(c, Trackers.TIMES_EQUIPPED, Trigger.EQUIP_ITEM, TrackerItemTags.TRACKER_TIMES_EQUIPPED);
         registerBasic(c, Trackers.TIMES_FISHING_ROD_REELED_IN, Trigger.REEL_IN_FISHING_ROD, TrackerItemTags.TRACKER_FISHING_ROD);
         registerBasic(c, Trackers.TIMES_FISHING_ROD_CAST, Trigger.CAST_FISHING_ROD, TrackerItemTags.TRACKER_FISHING_ROD);
-        registerBasic(c, Trackers.TIMES_FISHING_ROD_CAUGHT_SOMETHING, Trigger.CATCH_ITEM_WITH_FISHING_ROD, TrackerItemTags.TRACKER_FISHING_ROD);
+        registerIdMap(c, Trackers.TIMES_FISHING_ROD_CAUGHT_SOMETHING, Trigger.CATCH_ITEM_WITH_FISHING_ROD, StatFormatters.DEFAULT, TrackerItemTags.TRACKER_FISHING_ROD);
         registerBasic(c, Trackers.TIME_UNDERWATER, Trigger.TICK_UNDERWATER, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_UNDERWATER);
         registerBasic(c, Trackers.TIME_SNEAKING, Trigger.TICK_SNEAK, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_SNEAKING);
         registerBasic(c, Trackers.DISTANCE_FALLEN, Trigger.FALL, StatFormatters.DISTANCE, TrackerItemTags.TRACKER_DISTANCE_FALLEN);

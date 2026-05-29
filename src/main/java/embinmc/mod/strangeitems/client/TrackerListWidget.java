@@ -1,14 +1,18 @@
 package embinmc.mod.strangeitems.client;
 
+import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.tracker.MapLikeTracker;
 import embinmc.mod.strangeitems.tracker.Tracker;
+import embinmc.mod.strangeitems.tracker.TrackerTags;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
@@ -32,10 +36,25 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
         this.player = player;
         this.trackerRegistry = this.player.registryAccess().lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
         this.setX(TrackerListWidget.WIDTH);
-        StrangeUtil.getTrackersForItem(this.player.registryAccess(), this.checkingStack, true).forEach(trackerHolder -> {
-            TrackerEntry trackerEntry = new TrackerEntry(trackerHolder.value());
-            this.addEntry(trackerEntry, trackerEntry.getHeight());
-        });
+
+        List<Holder<Tracker>> trackersForItem = StrangeUtil.getTrackersForItem(this.player.registryAccess(), this.checkingStack, true);
+        HolderSet<Tracker> tooltipOrder = StrangeUtil.getTooltipOrder(this.player.registryAccess(), TrackerTags.TOOLTIP_ORDER);
+        for (Holder<Tracker> trackerHolder : tooltipOrder) {
+            if (trackersForItem.contains(trackerHolder)) {
+                TrackerEntry trackerEntry = new TrackerEntry(trackerHolder.value());
+                this.addEntry(trackerEntry, trackerEntry.getHeight());
+            }
+        }
+        for (Holder<Tracker> trackerHolder : trackersForItem) {
+            if (!tooltipOrder.contains(trackerHolder)) {
+                TrackerEntry trackerEntry = new TrackerEntry(trackerHolder.value());
+                this.addEntry(trackerEntry, trackerEntry.getHeight());
+            }
+        }
+    }
+
+    public void reupdateWithSearch(final String search) {
+
     }
 
     public class TrackerEntry extends ObjectSelectionList.Entry<TrackerEntry> {

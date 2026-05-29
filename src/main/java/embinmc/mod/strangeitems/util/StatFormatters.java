@@ -20,7 +20,7 @@ public interface StatFormatters {
         double seconds = value / 20D;
         double minutes = seconds / 60D;
         double hours = minutes / 60D;
-        return "%,2f".formatted(hours);
+        return "%,2f h".formatted(hours);
     });
     StatFormatter TIMESTAMP = register("timestamp", value -> TimestampTracker.DATE_FORMAT.format(Date.from(Instant.ofEpochSecond(value))));
 

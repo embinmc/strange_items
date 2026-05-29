@@ -1,6 +1,5 @@
 package embinmc.mod.strangeitems.client;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -15,13 +14,15 @@ public class StatShowcaseScreen extends Screen {
 
     protected StatShowcaseScreen() {
         super(TITLE);
-        this.player = Minecraft.getInstance().player;
+        this.player = this.minecraft.player;
     }
 
     @Override
     protected void init() {
-        if (this.player == null || this.player.getActiveItem().isEmpty())
+        if (this.player == null || this.player.getActiveItem().isEmpty()) {
+            this.minecraft.gui.setScreen(null);
             return;
+        }
         this.searchBar = new EditBox(this.minecraft.font, SEARCH_BAR_HINT);
         this.searchBar.setHint(SEARCH_BAR_HINT);
         this.searchBar.setY(10);
@@ -30,6 +31,7 @@ public class StatShowcaseScreen extends Screen {
         this.addRenderableWidget(this.searchBar);
         this.trackerListWidget = new TrackerListWidget(this.player, this.player.getActiveItem(), this.minecraft, this.width, 40, 16);
         this.addRenderableWidget(this.trackerListWidget);
+        this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
     }
 
     @Override

@@ -176,4 +176,17 @@ public class StrangeUtil {
         }
         return foundTrackers;
     }
+
+    public static List<Holder<Tracker>> getOrdered(List<Holder<Tracker>> list, HolderSet<Tracker> order) {
+        List<Holder<Tracker>> newOrdered = new ArrayList<>(list.size());
+        for (Holder<Tracker> trackerHolder : order) {
+            if (list.contains(trackerHolder))
+                newOrdered.add(trackerHolder);
+        }
+        for (Holder<Tracker> trackerHolder : list) {
+            if (!order.contains(trackerHolder))
+                newOrdered.add(trackerHolder);
+        }
+        return newOrdered;
+    }
 }

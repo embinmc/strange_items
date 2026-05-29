@@ -3,6 +3,7 @@ package embinmc.mod.strangeitems.tracker;
 import com.mojang.datafixers.util.Function7;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class MapLikeTracker extends Tracker {
+    protected static final Component PREFIX = Component.literal(" > ").withStyle(ChatFormatting.GRAY);
+    protected static final Component SEP = Component.literal(": ").withStyle(ChatFormatting.GRAY);
     protected final Identifier mapSaveId;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

@@ -43,6 +43,7 @@
   "tracker.strangeitems.time_in_dimensions":"Time Spent in Dimensions",
 
   "screens.strangeitems.config": "Strange Items Config",
+  "screens.strangeitems.stat_showcase.search_bar_hint": "Search trackers...",
   "setting.strangeitems.in_depth_tracking": "In Depth Tracking",
   "setting.strangeitems.in_depth_tracking.desc": "Whether or not the mod should track",
   "setting.strangeitems.in_depth_tracking.desc2": "extra stuff, such as specific blocks broken.",
