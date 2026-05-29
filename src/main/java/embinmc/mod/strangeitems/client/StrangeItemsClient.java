@@ -9,6 +9,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
@@ -56,6 +57,12 @@ public class StrangeItemsClient implements ClientModInitializer {
 
         LOGGER.info("Reading config...");
         StrangeConfig.readConfig();
+
+        ClientTickEvents.END_CLIENT_TICK.register(Id.of("test"), minecraft -> {
+            while (show_blocks_mined.consumeClick()) {
+                minecraft.setScreenAndShow(new StatShowcaseScreen());
+            }
+        });
 
         // Test to make sure my data fix sort logic was good
         //Stream<Integer> intStream = Stream.of(4, 7, 9, 8, 2, 0, 5, 4, 12, 6);
