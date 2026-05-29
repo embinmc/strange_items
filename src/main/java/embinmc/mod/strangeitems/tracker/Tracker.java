@@ -10,6 +10,7 @@ import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
 import embinmc.mod.strangeitems.client.StrangeOptions;
+import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.event.TrackerEvents;
 import embinmc.mod.strangeitems.util.StatFormatters;
 import embinmc.mod.strangeitems.util.StrangeUtil;
@@ -217,6 +218,9 @@ public abstract class Tracker {
         CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
         List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
+        trackersToShow = trackersToShow.stream()
+                .filter(trackerHolder -> StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(itemStack.typeHolder(), trackerHolder))
+                .toList();
         if (trackersToShow.isEmpty())
             return;
         list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));

@@ -3,10 +3,14 @@ package embinmc.mod.strangeitems.client.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import embinmc.mod.strangeitems.StrangeRegistries;
+import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.tracker.LegacyTracker;
 import java.util.List;
+
+import embinmc.mod.strangeitems.tracker.Tracker;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,14 +20,10 @@ public record HiddenTrackers(List<Condition> conditions) {
         ).apply(h, HiddenTrackers::new)
     );
 
-    public boolean shouldShowForItem(ItemStack item, LegacyTracker tracker) {
-        return this.shouldShowForItem(item.typeHolder(), StrangeRegistries.TRACKER.wrapAsHolder(tracker));
-    }
-
-    public boolean shouldShowForItem(Holder<Item> item, Holder<LegacyTracker> tracker) {
+    public boolean shouldShowForItem(Holder<Item> item, Holder<Tracker> tracker) {
         for (Condition condition : this.conditions) {
             if (condition.affectedItems.contains(item)) {
-                if (condition.trackers.contains(tracker)) {
+                if (condition.trackers.contains(tracker.unwrapKey().orElseThrow())) {
                     return false;
                 }
             }
@@ -38,10 +38,10 @@ public record HiddenTrackers(List<Condition> conditions) {
                 '}';
     }
 
-    public record Condition(List<Holder<Item>> affectedItems, List<Holder<LegacyTracker>> trackers) {
+    public record Condition(List<Holder<Item>> affectedItems, List<ResourceKey<Tracker>> trackers) {
         public static final Codec<Condition> CODEC = RecordCodecBuilder.create(c -> c.group(
                 BuiltInRegistries.ITEM.holderByNameCodec().listOf().fieldOf("items").forGetter(Condition::affectedItems),
-                StrangeRegistries.TRACKER.holderByNameCodec().listOf().fieldOf("trackers").forGetter(Condition::trackers)
+                ResourceKey.codec(StrangeRegistryKeys.TRACKER_NEW).listOf().fieldOf("trackers").forGetter(Condition::trackers)
             ).apply(c, Condition::new)
         );
 
