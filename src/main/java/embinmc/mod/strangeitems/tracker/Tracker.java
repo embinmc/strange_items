@@ -222,16 +222,15 @@ public abstract class Tracker {
         list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
         trackerAddIndex[0] += 1;
         if (dataVersion < StrangeItems.DATA_VERSION) {
-            List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 120, Style.EMPTY);
+            List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 140, Style.EMPTY);
             lines.forEach(line -> {
                 list.add(trackerAddIndex[0], Component.literal(line.getString()).withStyle(ChatFormatting.RED));
                 trackerAddIndex[0] += 1;
             });
-            trackerAddIndex[0] -= 1;
         }
         for (Holder<Tracker> trackerHolder : trackersToShow) {
             Tracker tracker = trackerHolder.value();
-            list.addAll(trackerAddIndex[0] + 1, tracker.getTooltip(tooltipContext.registries(), itemStack));
+            list.addAll(trackerAddIndex[0], tracker.getTooltip(tooltipContext.registries(), itemStack));
         }
     }
 }

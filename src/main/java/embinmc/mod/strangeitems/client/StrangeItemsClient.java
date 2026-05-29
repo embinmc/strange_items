@@ -57,6 +57,10 @@ public class StrangeItemsClient implements ClientModInitializer {
         LOGGER.info("Reading config...");
         StrangeConfig.readConfig();
 
+        // Test to make sure my data fix sort logic was good
+        //Stream<Integer> intStream = Stream.of(4, 7, 9, 8, 2, 0, 5, 4, 12, 6);
+        //intStream.sorted(Comparator.comparingInt(Integer::intValue)).forEach(num -> LOGGER.info("{}", num));
+
         ItemTooltipCallback.EVENT.register(Id.of("item_tooltip"), Tracker::itemTooltip);
 
         ClientCommandRegistrationCallback.EVENT.register((commandDispatcher, commandBuildContext) -> {

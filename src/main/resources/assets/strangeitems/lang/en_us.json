@@ -6,7 +6,7 @@
   "tooltip.strangeitems.collectors_item": "Collector's",
   "tooltip.strangeitems.smithing_collectors.base": "Add an item you want to turn into a \"Collector's\" variant",
   "tooltip.strangeitems.smithing_collectors.addition": "Add a copy of the inputted item",
-  "tooltip.strangeitems.old_data_version": "Displayed stats may be inaccurate until one is incremented",
+  "tooltip.strangeitems.old_data_version": "This older item may display inaccurate stats until one is incremented",
   "tooltip.strangeitems.tracker_with_value": "%1$s: %2$s",
   "tooltip.strangeitems.no_registries": "No Registries Available",
 

@@ -20,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
+import java.util.Comparator;
 import java.util.List;
 
 public final class SIRegisteredEvents {
@@ -76,16 +77,14 @@ public final class SIRegisteredEvents {
 
         StrangeDataFixer.register(new ElytraTrackerFix());
 
-        TrackerEvents.ON_APPEND.register(Id.of("data_fix"), (registryAccess, tracker, itemStack, increaseAmount, data) -> {
-            itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
-                Identifier trackerId = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW).getKey(tracker);
-                return customData.update(nbt -> {
-                    int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
-                    if (dataVersion >= StrangeItems.DATA_VERSION)
-                        return;
-                    StrangeDataFixer.FIXERS.forEach(dataFixer -> dataFixer.fix(dataVersion, nbt));
-                });
-            });
+        TrackerEvents.WRITE_NBT.register(Id.of("data_fix"), (registryAccess, tracker, itemStack, nbt) -> {
+            int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+            if (dataVersion >= StrangeItems.DATA_VERSION)
+                return true;
+            StrangeDataFixer.FIXERS.stream()
+                    .sorted(Comparator.comparingInt(StrangeDataFixer::targetDataVersion))
+                    .forEach(dataFixer -> dataFixer.fix(dataVersion, nbt));
+            nbt.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
             return true;
         });
     }
