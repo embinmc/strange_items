@@ -9,16 +9,20 @@ import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.mixin.KeyBindAccessor;
+import embinmc.mod.strangeitems.tracker.LegacyTracker;
 import embinmc.mod.strangeitems.tracker.Tracker;
 import embinmc.mod.strangeitems.tracker.TrackerTags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -40,9 +44,13 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class StrangeUtil {
-    public static final String COLLECTORS_ITEM_TAG  = Id.of("collectors_item").toString();
-    public static final String HAS_ALL_TRACKERS_TAG = Id.of("has_all_trackers").toString();
-    public static final String DATA_VERSION_TAG = Id.of("data_version").toString();
+    public static final Identifier COLLECTORS_ITEM  = Id.of("collectors_item");
+    public static final Identifier HAS_ALL_TRACKERS = Id.of("has_all_trackers");
+    public static final Identifier DATA_VERSION     = Id.of("data_version");
+
+    public static final String COLLECTORS_ITEM_TAG  = COLLECTORS_ITEM.toString();
+    public static final String HAS_ALL_TRACKERS_TAG = HAS_ALL_TRACKERS.toString();
+    public static final String DATA_VERSION_TAG     = DATA_VERSION.toString();
 
     /**
      * Gets the keys from an NBT Compound, sorted from the highest to lowest value.
@@ -119,7 +127,7 @@ public class StrangeUtil {
         return result;
     }
 
-    public static List<Tracker> getListOfTrackers() {
+    public static List<LegacyTracker> getListOfTrackers() {
         return StrangeRegistries.TRACKER.stream().toList();
     }
 
@@ -129,12 +137,12 @@ public class StrangeUtil {
     }
 
     public static void addAllTrackerTooltips(Item.TooltipContext context, Consumer<Component> textConsumer, ItemStack stack) {
-        List<Tracker> trackersToAppend = new ArrayList<>(StrangeRegistries.TRACKER.size());
-        List<Tracker> trackersWithCount = new ArrayList<>(StrangeRegistries.TRACKER.size());
-        HolderSet<Tracker> entryList = getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
-        for (Holder<Tracker> registryEntry : entryList) {
+        List<LegacyTracker> trackersToAppend = new ArrayList<>(StrangeRegistries.TRACKER.size());
+        List<LegacyTracker> trackersWithCount = new ArrayList<>(StrangeRegistries.TRACKER.size());
+        HolderSet<LegacyTracker> entryList = HolderSet.direct(); //getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.TOOLTIP_ORDER);
+        for (Holder<LegacyTracker> registryEntry : entryList) {
             if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
-                Tracker tracker = registryEntry.value();
+                LegacyTracker tracker = registryEntry.value();
                 int val = tracker.getTrackerValueInt(stack);
                 if (!StrangeOptions.showTrackerIfZero() && val == 0)
                     continue;
@@ -144,7 +152,7 @@ public class StrangeUtil {
             }
         }
 
-        for (Tracker tracker : getListOfTrackers()) {
+        for (LegacyTracker tracker : getListOfTrackers()) {
             if (!entryList.contains(StrangeRegistries.TRACKER.wrapAsHolder(tracker))) {
                 if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack, tracker)) {
                     int val = tracker.getTrackerValueInt(stack);
@@ -161,17 +169,15 @@ public class StrangeUtil {
         textConsumer.accept(Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
         if (getDataVersion(stack) < StrangeItems.DATA_VERSION && !trackersWithCount.isEmpty())
             textConsumer.accept(Component.translatable("tooltip.strangeitems.old_data_version").withStyle(ChatFormatting.RED));
-        for (Tracker tracker : trackersToAppend) {
+        for (LegacyTracker tracker : trackersToAppend) {
             tracker.appendTooltip(stack, textConsumer);
         }
     }
 
-    public static HolderSet<Tracker> getTooltipOrder(@Nullable HolderLookup.Provider registries, ResourceKey<Registry<Tracker>> key, TagKey<Tracker> tag) {
+    public static HolderSet<Tracker> getTooltipOrder(HolderLookup.@Nullable Provider registries, TagKey<Tracker> tag) {
         if (registries != null) {
-            Optional<HolderSet.Named<Tracker>> optional = registries.lookupOrThrow(key).get(tag);
-            if (optional.isPresent()) {
-                return optional.get();
-            }
+            Optional<HolderSet.Named<Tracker>> optional = registries.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW).get(tag);
+            return optional.map(named -> (HolderSet<Tracker>) named).orElse(HolderSet.direct());
         }
         return HolderSet.direct();
     }
@@ -191,6 +197,21 @@ public class StrangeUtil {
     }
 
     public static int getDataVersion(ItemStack itemStack) {
-        return itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getIntOr("strangeitems:data_version", 0);
+        return itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getIntOr(DATA_VERSION_TAG, 0);
+    }
+
+    public static List<Holder<Tracker>> getTrackersForItem(HolderLookup.@Nullable Provider provider, ItemStack itemStack, boolean includeEmpty) {
+        if (provider == null)
+            return List.of();
+        HolderLookup.RegistryLookup<Tracker> lookup = provider.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
+        var filteredLookup = lookup.filterElements(tracker -> tracker.getTrackingItems().contains(itemStack.typeHolder()));
+        List<Holder<Tracker>> foundTrackers = new ArrayList<>(filteredLookup.listElements().toList().size());
+        Set<Holder.Reference<Tracker>> trackers = filteredLookup.listElements().collect(Collectors.toUnmodifiableSet());
+        CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        for (Holder.Reference<Tracker> tracker : trackers) {
+            if (includeEmpty || nbt.contains(tracker.getRegisteredName()))
+                foundTrackers.add(tracker);
+        }
+        return foundTrackers;
     }
 }

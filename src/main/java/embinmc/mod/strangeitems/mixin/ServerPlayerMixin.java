@@ -30,4 +30,13 @@ public class ServerPlayerMixin {
             ci.cancel();
         }
     }
+
+    @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
+    public void jumpEvents(CallbackInfo ci) {
+        ServerPlayer player = (ServerPlayer)(Object) this;
+        InteractionResult result = ServerPlayerEvents.ON_JUMP.invoker().jump(player);
+        if (result == InteractionResult.FAIL) {
+            ci.cancel();
+        }
+    }
 }

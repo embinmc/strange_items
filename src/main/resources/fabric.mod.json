@@ -19,7 +19,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": ["embinmc.mod.strangeitems.StrangeItems"],
-		"client": ["embinmc.mod.strangeitems.client.StrangeItemsClient"]
+		"client": ["embinmc.mod.strangeitems.client.StrangeItemsClient"],
+		"fabric-datagen": ["embinmc.mod.strangeitems.datagen.StrangeItemsDataGenerator"]
 	},
 	"accessWidener": "strangeitems.accesswidener",
 	"mixins": [

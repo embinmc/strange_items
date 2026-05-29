@@ -1,6 +1,5 @@
 package embinmc.mod.strangeitems;
 
-import embinmc.mod.strangeitems.tracker.Trackers;
 import embinmc.mod.strangeitems.util.Id;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
@@ -24,7 +23,6 @@ public class StrangeItems implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		StrangeRegistries.acknowledgeRegistries();
-        Trackers.init();
 		StrangeItemsComponents.init();
 
         SIRegisteredEvents.registerEvents();

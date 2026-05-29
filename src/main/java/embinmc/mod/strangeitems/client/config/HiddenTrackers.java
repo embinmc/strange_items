@@ -3,7 +3,7 @@ package embinmc.mod.strangeitems.client.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import embinmc.mod.strangeitems.StrangeRegistries;
-import embinmc.mod.strangeitems.tracker.Tracker;
+import embinmc.mod.strangeitems.tracker.LegacyTracker;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,11 +16,11 @@ public record HiddenTrackers(List<Condition> conditions) {
         ).apply(h, HiddenTrackers::new)
     );
 
-    public boolean shouldShowForItem(ItemStack item, Tracker tracker) {
+    public boolean shouldShowForItem(ItemStack item, LegacyTracker tracker) {
         return this.shouldShowForItem(item.typeHolder(), StrangeRegistries.TRACKER.wrapAsHolder(tracker));
     }
 
-    public boolean shouldShowForItem(Holder<Item> item, Holder<Tracker> tracker) {
+    public boolean shouldShowForItem(Holder<Item> item, Holder<LegacyTracker> tracker) {
         for (Condition condition : this.conditions) {
             if (condition.affectedItems.contains(item)) {
                 if (condition.trackers.contains(tracker)) {
@@ -38,7 +38,7 @@ public record HiddenTrackers(List<Condition> conditions) {
                 '}';
     }
 
-    public record Condition(List<Holder<Item>> affectedItems, List<Holder<Tracker>> trackers) {
+    public record Condition(List<Holder<Item>> affectedItems, List<Holder<LegacyTracker>> trackers) {
         public static final Codec<Condition> CODEC = RecordCodecBuilder.create(c -> c.group(
                 BuiltInRegistries.ITEM.holderByNameCodec().listOf().fieldOf("items").forGetter(Condition::affectedItems),
                 StrangeRegistries.TRACKER.holderByNameCodec().listOf().fieldOf("trackers").forGetter(Condition::trackers)

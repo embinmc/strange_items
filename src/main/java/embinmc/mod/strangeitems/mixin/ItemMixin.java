@@ -8,6 +8,7 @@ import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.tracker.*;
 import embinmc.mod.strangeitems.util.StrangeUtil;
+import net.minecraft.core.HolderSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.component.CustomData;
@@ -33,21 +34,21 @@ import net.minecraft.world.item.component.TooltipDisplay;
 
 @Mixin(ItemStack.class)
 public abstract class ItemMixin {
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
-        ordinal = 0, shift = At.Shift.AFTER), method = "addDetailsToTooltip", cancellable = true)
+    //@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
+    //    ordinal = 0, shift = At.Shift.AFTER), method = "addDetailsToTooltip", cancellable = true)
     public void appendTooltipMixin(Item.TooltipContext context, TooltipDisplay displayComponent, Player player, TooltipFlag type, Consumer<Component> list, CallbackInfo ci) {
         ItemStack stack = (ItemStack)(Object) this;
         if (!StrangeOptions.showTrackersInTooltip()) return;
         if (stack.is(TrackerItemTags.CAN_TRACK_STATS) || StrangeUtil.hasAllTrackers(stack)) {
-            for (Holder<Tracker> registryEntry : StrangeUtil.getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.HAS_SPECIAL_TOOLTIP)) {
+            for (Holder<LegacyTracker> registryEntry : HolderSet.<LegacyTracker>direct()) { //StrangeUtil.getTooltipOrder(context.registries(), StrangeRegistryKeys.TRACKER, TrackerTags.HAS_SPECIAL_TOOLTIP)) {
                 if (StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(stack.typeHolder(), registryEntry)) {
-                    if (registryEntry.value() instanceof MapTracker mapTracker) {
+                    if (registryEntry.value() instanceof LegacyMapTracker mapTracker) {
                         if (mapTracker.shouldShowTooltip(stack)) {
                             mapTracker.appendTooltipMap(stack, list, ci, type);
                             return;
                         }
                     }
-                    if (registryEntry.value() instanceof TimestampTracker tsTracker) {
+                    if (registryEntry.value() instanceof LegacyTimestampTracker tsTracker) {
                         if (tsTracker.should_show_tooltip(stack)) {
                             tsTracker.append_tooltip_map(stack, list, ci, type);
                             return;
@@ -59,7 +60,7 @@ public abstract class ItemMixin {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.AFTER), method = "getTooltipLines")
+    //@Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.AFTER), method = "getTooltipLines")
     public void nameColorMixin(Item.TooltipContext context, Player player, TooltipFlag type, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
         ItemStack stack = (ItemStack)(Object) this;
         if (StrangeUtil.isCollectors(stack)) {

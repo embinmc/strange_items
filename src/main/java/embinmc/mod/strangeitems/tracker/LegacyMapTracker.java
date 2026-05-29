@@ -27,25 +27,25 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 
 // TODO: rewrite all this dog shit
-public class MapTracker extends Tracker {
+public class LegacyMapTracker extends LegacyTracker {
     private final Map<String, String> idRedirects = HashMap.newHashMap(12);
     public String map_id;
     public String translation_prefix;
 
-    public MapTracker(String id, String translate_prefix, TagKey<Item> tag, StatFormatter stat_formatter) {
+    public LegacyMapTracker(String id, String translate_prefix, TagKey<Item> tag, StatFormatter stat_formatter) {
         super(id, tag);
         this.map_id = this.getId().toString() + "_map";
         this.translation_prefix = translate_prefix;
         this.stat_formatter = stat_formatter;
     }
 
-    public MapTracker(String id, String translate_prefix, TagKey<Item> tag) {
+    public LegacyMapTracker(String id, String translate_prefix, TagKey<Item> tag) {
         super(id, tag);
         this.map_id = this.getId().toString() + "_map";
         this.translation_prefix = translate_prefix;
     }
 
-    public MapTracker(String id, String translate_prefix) {
+    public LegacyMapTracker(String id, String translate_prefix) {
         super(id, TrackerItemTags.CAN_TRACK_STATS);
         this.map_id = this.getId().toString() + "_map";
         this.translation_prefix = translate_prefix;

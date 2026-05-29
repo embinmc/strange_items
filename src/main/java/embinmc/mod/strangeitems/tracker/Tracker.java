@@ -1,208 +1,237 @@
 package embinmc.mod.strangeitems.tracker;
 
-import embinmc.mod.strangeitems.StrangeItemsComponents;
+import com.mojang.datafixers.util.Function6;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistries;
+import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
+import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.event.TrackerEvents;
-import embinmc.mod.strangeitems.util.Id;
+import embinmc.mod.strangeitems.util.StatFormatters;
 import embinmc.mod.strangeitems.util.StrangeUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
-/**
- * Base Tracker class
- */
-// TODO: rewrite all this dog shit
-public class Tracker {
-    // god this code is a mess
-    private static final Logger LOGGER = LoggerFactory.getLogger(Tracker.class);
-    public String id;
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+public abstract class Tracker {
+    protected final Component description;
+    protected final Optional<Component> altDescription;
+    protected final StatFormatter statFormatter;
+    protected final Identifier saveId;
+    protected final Trigger trigger;
+    protected final HolderSet<Item> itemsToTrack;
 
-    /**
-     * The StatFormatter used when displaying a tracker's value in its tooltip.
-     * @see StatFormatter
-     */
-    public StatFormatter stat_formatter = StatFormatter.DEFAULT;
+    public static final Codec<Tracker> CODEC = StrangeRegistries.TRACKER_TYPE.byNameCodec().dispatch(Tracker::getType, TrackerType::codec);
+    protected static final Component NO_REGISTRIES = Component.translatable("tooltip.strangeitems.no_registries").withStyle(ChatFormatting.RED);
 
-    /**
-     * The multiplier applied to the value shown on the tracker tooltip.
-     */
-    public int formatted_value_multiplier = 1;
-    public int default_value = 0;
-
-    /**
-     * The item tag that controls whether an item should have a certain tracker.
-     */
-    public TagKey<Item> item_tag;
-
-    public Tracker(String id, TagKey<Item> tag, StatFormatter stat_formatter, int formatted_value_multiplier) {
-        this.stat_formatter = stat_formatter;
-        this.formatted_value_multiplier = formatted_value_multiplier;
-        this.item_tag = tag;
-        this.id = Id.of(id).toString();
-    }
-    public Tracker(String id, TagKey<Item> tag) {
-        this.item_tag = tag;
-        this.id = Id.of(id).toString();
+    protected Tracker(Trigger trigger, Component description, Optional<Component> altDescription, StatFormatter statFormatter, Identifier saveId, HolderSet<Item> itemsToTrack) {
+        this.description = description;
+        this.altDescription = altDescription;
+        this.statFormatter = statFormatter;
+        this.saveId = saveId;
+        this.trigger = trigger;
+        this.itemsToTrack = itemsToTrack;
     }
 
-    public void setTrackerValueInt(ItemStack stack, int value) {
-        if (!TrackerEvents.WRITE_INT.invoker().writeInt(this, stack, value)) return;
-        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, comp -> comp.update(currentnbt -> currentnbt.putInt(this.toString(), value)));
+    public abstract TrackerType<?> getType();
+
+    public void writeToNbt(final CompoundTag nbt, final int count, final @Nullable Identifier data) {
+        int prevVal = nbt.getIntOr(this.saveId.toString(), 0);
+        nbt.putInt(this.saveId.toString(), prevVal + count);
     }
 
-    public void setTrackerValueNbt(ItemStack stack, Tag value) {
-        if (!TrackerEvents.WRITE_NBT.invoker().writeNbt(this, stack, value)) return;
-        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, comp -> comp.update(currentnbt -> currentnbt.put(this.toString(), value)));
-    }
+    @Environment(EnvType.CLIENT)
+    public List<Component> getTooltip(final HolderLookup.@Nullable Provider provider, final ItemStack itemStack) {
 
-    public StatFormatter getStatFormatter() {
-        return this.stat_formatter;
-    }
-
-    public String toString() {
-        return this.getId().toString();
-    }
-
-    @Deprecated(forRemoval = true)
-    public String to_string() {
-        return this.toString();
-    }
-
-    public Identifier getId() {
-        Identifier id = StrangeRegistries.TRACKER.getKey(this);
-        if (id != null) return id;
-        return Id.of(this.id);
-    }
-
-    public String getTranslationKey() {
-        return Util.makeDescriptionId("tracker", this.getId());
-    }
-
-    /**
-     * Checks if the given stack has any tracker data on it.
-     * @param stack The item stack to check for.
-     * @return <code>true</code> if the stack has the tracker;
-     * <code>false</code> if it doesn't
-     */
-    public boolean stackHasTracker(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains(this.toString());
-    }
-
-    public int getTrackerValueInt(ItemStack stack) {
-        if (!this.stackHasTracker(stack)) {
-            return this.default_value;
-        }
-        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getInt(this.toString()).orElse(0);
-    }
-
-    public CompoundTag getTrackerValueNbt(ItemStack stack) {
-        if (!this.stackHasTracker(stack)) {
-            return new CompoundTag();
-        }
-        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getCompound(this.toString()).orElse(new CompoundTag());
-    }
-
-    /**
-     * Increments the tracker for an item stack by a specified amount when called.
-     * @param stack Item stack to increment the tracker on.
-     * @param add_amount Amount to add.
-     */
-    public void appendTracker(ItemStack stack, int add_amount) {
-        if (this.shouldTrack(stack)) {
-            if (TrackerEvents.ON_APPEND.invoker().onAppend(this, stack, add_amount)) {
-                int tracker_count = this.getTrackerValueInt(stack) + add_amount;
-                this.setTrackerValueInt(stack, tracker_count);
-            }
-        }
-    }
-
-    /**
-     * Increments the tracker for an item stack by 1 when called.
-     * @param stack Item stack to increment the tracker on.
-     */
-    public void appendTracker(ItemStack stack) {
-        this.appendTracker(stack, 1);
-    }
-
-    public String getFormattedTrackerValue(ItemStack stack) {
-        return this.getStatFormatter().format(this.getTrackerValueInt(stack) * this.formatted_value_multiplier);
-    }
-
-    public void appendTooltip(ItemStack stack, Consumer<Component> tooltip) {
-        if (this.shouldTrack(stack)) {
-            Component stat_text = Component.literal(this.getFormattedTrackerValue(stack)).withStyle(ChatFormatting.YELLOW);
-            Component tooltip_text = this.getNameForTooltip().append(Component.literal(": ").withStyle(ChatFormatting.GRAY));
-            tooltip.accept(Component.literal(" ").append(tooltip_text).append(stat_text));
-        }
-    }
-
-    protected MutableComponent getNameForTooltip() {
+        CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag nbt = customData.copyTag();
+        if (!nbt.contains(this.saveId.toString()))
+            return List.of();
+        int value = nbt.getIntOr(this.saveId.toString(), 0);
+        MutableComponent formattedValue = Component.literal(this.getFormattedValue(value)).withStyle(ChatFormatting.YELLOW);
+        MutableComponent desc;
         if (StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
-            Identifier id = StrangeRegistries.TRACKER.getKey(this);
-            if (id != null) {
-                return Component.literal(id.toString()).withStyle(ChatFormatting.DARK_GRAY);
-            } else {
-                return Component.translatable(this.getTranslationKey()).withStyle(ChatFormatting.GRAY);
-            }
+            desc = Component.literal(this.getId(provider).toString()).withStyle(ChatFormatting.GRAY);
         } else {
-            return Component.translatable(this.getTranslationKey()).withStyle(ChatFormatting.GRAY);
+            desc = this.getRelevantDescription();
         }
+        Component line = Component.translatable(this.trackerWithValueTranslationKey(), desc, formattedValue).withStyle(ChatFormatting.GRAY);
+        return List.of(Component.literal(" ").append(line));
     }
 
-    public void appendTooltipNoSpace(ItemStack stack, Consumer<Component> tooltip, TooltipFlag type) {
-        if (this.shouldTrack(stack)) {
-            Component stat_text = Component.literal(this.getFormattedTrackerValue(stack)).withStyle(ChatFormatting.YELLOW);
-            MutableComponent tooltip_text = Component.translatable(this.getTranslationKey()).append(": ").withStyle(ChatFormatting.GRAY);
-            //MutableText tooltip_text = this.get_name_for_tooltip().append(Text.literal(": ").formatted(Formatting.GRAY));
-            tooltip.accept(tooltip_text.append(stat_text));
-        }
+    public void addToShowcaseText(final Consumer<Component> consumer, final HolderLookup.Provider provider, final ItemStack itemStack) {
+        this.getTooltip(provider, itemStack).forEach(consumer);
     }
 
-    @Deprecated(forRemoval = true)
-    public void convert_legacy_tracker(ItemStack stack, DataComponentType<Integer> legacy_component, boolean rarity_fix) {
-        if (stack.has(legacy_component)) {
-            if (rarity_fix) {
-                stack.set(DataComponents.RARITY, stack.getItem().components().get(DataComponents.RARITY));
+    /// Even if the translation key `tooltip.strangeitems.tracker_with_value` is non-existent, it'll still format correctly.
+    protected final String trackerWithValueTranslationKey() {
+        String key = "tooltip.strangeitems.tracker_with_value";
+        return Language.getInstance().has(key) ? key : "%s: %s";
+    }
+
+    public String getFormattedValue(final int value) {
+        return this.statFormatter.format(value);
+    }
+
+    public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int count, final @Nullable Identifier data) {
+        itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
+            if (TrackerEvents.ON_APPEND.invoker().onAppend(registryAccess, this, itemStack, count, data))
+                return customData.update(nbt -> {
+                    if (TrackerEvents.WRITE_NBT.invoker().writeNbt(registryAccess, this, itemStack, nbt))
+                        this.writeToNbt(nbt, count, data);
+                });
+            return customData;
+        });
+    }
+
+    public void append(final RegistryAccess registryAccess, final ItemStack itemStack) {
+        this.appendWithData(registryAccess, itemStack, 1, null);
+    }
+
+    public Identifier getId(final HolderLookup.@Nullable Provider provider) {
+        if (provider == null)
+            return Identifier.withDefaultNamespace("unregistered");
+        HolderLookup.RegistryLookup<Tracker> lookup = provider.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
+        return lookup.listElements()
+                .filter(t -> t.value() == this)
+                .findFirst()
+                .map(t -> t.key().identifier())
+                .orElseThrow();
+    }
+
+    public Trigger getTrigger() {
+        return this.trigger;
+    }
+
+    public HolderSet<Item> getTrackingItems() {
+        return this.itemsToTrack;
+    }
+
+    @Environment(EnvType.CLIENT)
+    protected MutableComponent getRelevantDescription() {
+        if (Minecraft.getInstance().hasAltDown())
+            return this.altDescription.map(Component::copy).orElse(this.description.copy());
+        return this.description.copy();
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, StatFormatter> formatterCodec() {
+        return StrangeRegistries.STAT_FORMATTER.byNameCodec().optionalFieldOf("value_formatter", StatFormatters.DEFAULT).forGetter(a -> a.statFormatter);
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, Identifier> saveIdCodec() {
+        return Identifier.CODEC.validate(Tracker::validateSaveId).fieldOf("save_id").forGetter(a -> a.saveId);
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, Component> descriptionCodec() {
+        return ComponentSerialization.CODEC.fieldOf("description").forGetter(a -> a.description);
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, Optional<Component>> altDescriptionCodec() {
+        return ComponentSerialization.CODEC.optionalFieldOf("alt_description").forGetter(a -> a.altDescription);
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, Trigger> triggerCodec() {
+        return StrangeRegistries.TRIGGER.byNameCodec().fieldOf("trigger").forGetter(Tracker::getTrigger);
+    }
+
+    protected static <T extends Tracker> RecordCodecBuilder<T, HolderSet<Item>> itemsToTrackCodec() {
+        return RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items_to_track").forGetter(a -> a.itemsToTrack);
+    }
+
+    protected static <T extends Tracker> MapCodec<T> noAdditionalArgsCodec(Function6<Trigger, Component, Optional<Component>, StatFormatter, Identifier, HolderSet<Item>, T> constructor) {
+        return RecordCodecBuilder.mapCodec(a -> a.group(
+                triggerCodec(),
+                descriptionCodec(),
+                altDescriptionCodec(),
+                formatterCodec(),
+                saveIdCodec(),
+                itemsToTrackCodec()
+        ).apply(a, constructor));
+    }
+
+    protected static DataResult<Identifier> validateSaveId(final Identifier identifier) {
+        var dataVersion = validateIdNotThis(identifier, StrangeUtil.DATA_VERSION);
+        var hasAllTrack = validateIdNotThis(identifier, StrangeUtil.HAS_ALL_TRACKERS);
+        var isCollector = validateIdNotThis(identifier, StrangeUtil.COLLECTORS_ITEM);
+        if (dataVersion.isEmpty() && hasAllTrack.isEmpty() && isCollector.isEmpty())
+            return DataResult.success(identifier);
+        return dataVersion.orElse(
+                hasAllTrack.orElse(
+                        isCollector.orElse(
+                                DataResult.error(() -> "Tracker save id is set to not allowed value: " + identifier)
+                        )
+                )
+        );
+    }
+
+    private static Optional<DataResult<Identifier>> validateIdNotThis(final Identifier checkingId, final Identifier idNotToBe) {
+        if (idNotToBe.equals(checkingId))
+            return Optional.of(DataResult.error(() -> "Tracker save id can't be " + idNotToBe));
+        return Optional.empty();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void itemTooltip(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipFlag tooltipFlag, List<Component> list) {
+        int[] trackerAddIndex = {1};
+        if (StrangeUtil.isCollectors(itemStack)) {
+            MutableComponent itemName = itemStack.getHoverName().copy();
+            MutableComponent name = Component.empty();
+            name.append(itemName);
+            if (itemStack.has(DataComponents.CUSTOM_NAME)) {
+                name.withStyle(ChatFormatting.ITALIC);
             }
-            int legacy_data = stack.getOrDefault(legacy_component, 0);
-            this.setTrackerValueInt(stack, this.getTrackerValueInt(stack) + legacy_data);
-            stack.remove(legacy_component);
+            name.withStyle(ChatFormatting.DARK_RED);
+            list.set(0, name);
+            if (itemStack.has(DataComponents.CUSTOM_NAME)) {
+                MutableComponent name2 = Component.empty().append(itemStack.getItemName());
+                name2.withStyle(ChatFormatting.DARK_RED);
+                list.add(1, name2);
+                trackerAddIndex[0] += 1;
+            }
         }
-    }
-
-    /**
-     * Converts the data of a specified legacy tracker component to the new data format, if the specified stack has legacy data.
-     * @param stack Item stack to check for.
-     * @param legacy_component The tracker component to convert.
-     */
-    @Deprecated(forRemoval = true)
-    public void convert_legacy_tracker(ItemStack stack, DataComponentType<Integer> legacy_component) {
-        this.convert_legacy_tracker(stack, legacy_component, false);
-    }
-
-    public boolean shouldTrack(ItemStack stack) {
-        return stack.is(this.item_tag) || this.stackHasTracker(stack) || stack.has(StrangeItemsComponents.HAS_ALL_TRACKERS);
-    }
-
-    public boolean isIn(TagKey<Tracker> tag) {
-        return StrangeRegistries.TRACKER.wrapAsHolder(this).is(tag);
+        if (!StrangeOptions.showTrackersInTooltip() || !itemStack.has(DataComponents.CUSTOM_DATA))
+            return;
+        CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+        List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
+        if (trackersToShow.isEmpty())
+            return;
+        list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
+        trackerAddIndex[0] += 1;
+        if (dataVersion < StrangeItems.DATA_VERSION) {
+            List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 120, Style.EMPTY);
+            lines.forEach(line -> {
+                list.add(trackerAddIndex[0], Component.literal(line.getString()).withStyle(ChatFormatting.RED));
+                trackerAddIndex[0] += 1;
+            });
+            trackerAddIndex[0] -= 1;
+        }
+        for (Holder<Tracker> trackerHolder : trackersToShow) {
+            Tracker tracker = trackerHolder.value();
+            list.addAll(trackerAddIndex[0] + 1, tracker.getTooltip(tooltipContext.registries(), itemStack));
+        }
     }
 }

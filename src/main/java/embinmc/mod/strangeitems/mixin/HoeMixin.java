@@ -1,6 +1,6 @@
 package embinmc.mod.strangeitems.mixin;
 
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Trigger;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.context.UseOnContext;
@@ -15,6 +15,9 @@ public class HoeMixin {
         target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"),
         method = "useOn")
     public void tillDirtMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        Trackers.DIRT_TILLED.appendTracker(context.getItemInHand());
+        if (context.getPlayer() != null)
+            Trigger.TILL_DIRT.appendWithDimension(context.getPlayer(), context.getItemInHand());
+        else
+            Trigger.TILL_DIRT.append(context.getLevel().registryAccess(), context.getItemInHand());
     }
 }

@@ -2,18 +2,23 @@ package embinmc.mod.strangeitems;
 
 import embinmc.mod.strangeitems.event.ServerPlayerEvents;
 import embinmc.mod.strangeitems.event.TrackerEvents;
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Tracker;
+import embinmc.mod.strangeitems.tracker.Trigger;
 import embinmc.mod.strangeitems.util.ElytraTrackerFix;
 import embinmc.mod.strangeitems.util.Id;
 import embinmc.mod.strangeitems.util.StrangeDataFixer;
+import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 
 import java.util.List;
 
@@ -26,7 +31,7 @@ public final class SIRegisteredEvents {
     public static void registerEvents() {
         PlayerBlockBreakEvents.AFTER.register(BLOCK_MINED, (level, player, blockPos, blockState, blockEntity) -> {
             Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
-            Trackers.BLOCKS_MINED.appendTracker(player.getActiveItem(), blockId.toString());
+            Trigger.BLOCK_MINED.appendWithData(player.registryAccess(), player.getActiveItem(), 1, blockId);
         });
 
         ServerPlayerEvents.ON_TICK.register(PLAYER_TICK, player -> {
@@ -37,19 +42,18 @@ public final class SIRegisteredEvents {
 
                 if (!headStack.isEmpty()) {
                     if (player.isEyeInFluid(FluidTags.WATER)) {
-                        Trackers.TIME_UNDERWATER.appendTracker(headStack);
+                        Trigger.TICK_UNDERWATER.appendWithDimension(player, headStack);
                     }
                 }
                 if (!chestStack.isEmpty()) {
                     if (player.isInLava()) {
-                        Trackers.TIME_IN_LAVA.appendTracker(chestStack);
+                        Trigger.TICK_IN_LAVA.appendWithDimension(player, chestStack);
                     }
                 }
                 if (!legsStack.isEmpty()) {
-                    String dimension = player.level().dimensionTypeRegistration().getRegisteredName();
-                    Trackers.TIME_IN_DIMENSIONS.appendTracker(legsStack, dimension);
+                    Trigger.TICK.appendWithDimension(player, legsStack);
                     if (player.isDiscrete()) {
-                        Trackers.TIME_SNEAKING.appendTracker(legsStack);
+                        Trigger.TICK_SNEAK.appendWithDimension(player, legsStack);
                     }
                 }
                 if (player.isFallFlying()) {
@@ -58,7 +62,7 @@ public final class SIRegisteredEvents {
                             .toList();
                     for (EquipmentSlot equipmentSlot : slotsWithGlider) {
                         ItemStack gliderItem = player.getItemBySlot(equipmentSlot);
-                        Trackers.TIME_FLOWN_WITH_ELYTRA.appendTracker(gliderItem);
+                        Trigger.TICK_GLIDING.appendWithDimension(player, gliderItem);
                     }
                 }
             }
@@ -66,14 +70,22 @@ public final class SIRegisteredEvents {
         });
 
         ServerPlayerEvents.ON_DROP_ITEM.register(PLAYER_DROP_ITEM, (player, itemStack) -> {
-            Trackers.TIMES_DROPPED.appendTracker(itemStack);
+            Trigger.ITEM_DROPPED.appendWithDimension(player, itemStack);
             return InteractionResult.PASS;
         });
 
         StrangeDataFixer.register(new ElytraTrackerFix());
 
-        TrackerEvents.ON_APPEND.register(Id.of("data_fix"), (tracker, itemStack, increaseAmount) -> {
-            StrangeDataFixer.apply(itemStack);
+        TrackerEvents.ON_APPEND.register(Id.of("data_fix"), (registryAccess, tracker, itemStack, increaseAmount, data) -> {
+            itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
+                Identifier trackerId = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW).getKey(tracker);
+                return customData.update(nbt -> {
+                    int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+                    if (dataVersion >= StrangeItems.DATA_VERSION)
+                        return;
+                    StrangeDataFixer.FIXERS.forEach(dataFixer -> dataFixer.fix(dataVersion, nbt));
+                });
+            });
             return true;
         });
     }

@@ -1,6 +1,6 @@
 package embinmc.mod.strangeitems.mixin;
 
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Trigger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +15,6 @@ public abstract class BowMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"),
         method = "releaseUsing")
     public void bowMixin(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks, CallbackInfoReturnable<Boolean> cir) {
-        Trackers.SHOTS_FIRED.appendTracker(stack);
+        Trigger.SHOOT_ARROW.appendWithDimension(user, stack);
     }
 }

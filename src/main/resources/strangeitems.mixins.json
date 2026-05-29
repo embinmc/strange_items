@@ -16,6 +16,7 @@
     "HoeMixin",
     "ItemEnchantmentsMixin",
     "ItemMixin",
+    "LivingEntityMixin",
     "PlayerMixin",
     "ServerPlayerMixin",
     "ShearsMixin",
@@ -27,8 +28,8 @@
     "defaultRequire": 1
   },
   "client": [
+    "CollectorsMixin",
     "KeyBindAccessor",
-    "SmithingScreenMixin",
-    "CollectorsMixin"
+    "SmithingScreenMixin"
   ]
 }
