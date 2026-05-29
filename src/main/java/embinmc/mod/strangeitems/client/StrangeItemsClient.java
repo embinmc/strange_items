@@ -59,7 +59,7 @@ public class StrangeItemsClient implements ClientModInitializer {
         StrangeConfig.readConfig();
 
         ClientTickEvents.END_CLIENT_TICK.register(Id.of("test"), minecraft -> {
-            while (show_blocks_mined.consumeClick()) {
+            while (show_blocks_mined.consumeClick() && minecraft.level != null) {
                 minecraft.setScreenAndShow(new StatShowcaseScreen());
             }
         });

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.TrackerEntry> {
-    public static final int WIDTH = 150;
+    public static final int WIDTH = 180;
     final List<TrackerListWidget.TrackerEntry> unfilteredEntries = new ArrayList<>(64);
     final ItemStack checkingStack;
     final LocalPlayer player;
