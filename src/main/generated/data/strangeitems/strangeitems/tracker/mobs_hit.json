@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.mobs_hit"
+  },
+  "items_to_track": "#strangeitems:can_track_stats",
+  "save_id": "strangeitems:mobs_hit",
+  "trigger": "strangeitems:hit_mob"
+}

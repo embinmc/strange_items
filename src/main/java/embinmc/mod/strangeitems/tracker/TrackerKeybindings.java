@@ -22,47 +22,11 @@ public final class TrackerKeybindings {
         StrangeItemsClient.STRANGEKEYS
     );
 
-    public static final List<Tracker> WARNED_KEYBINDINGS = new ArrayList<>(99);
-
-    public static final Map<MapTracker, KeyMapping> MAP_TRACKER_KEYBINDINGS = Util.make(HashMap.newHashMap(8), (map) -> {
-        map.put(Trackers.BLOCKS_MINED, StrangeItemsClient.show_blocks_mined);
-        map.put(Trackers.MOBS_KILLED, StrangeItemsClient.show_mobs_killed);
-        map.put(Trackers.TIME_IN_DIMENSIONS, StrangeItemsClient.show_time_in_dimensions);
-        map.put(Trackers.SHOTS_HIT, StrangeItemsClient.SHOW_SHOTS_HIT);
-    });
-
-    public static final Map<TimestampTracker, KeyMapping> TIMESTAMP_TRACKER_KEYBINDINGS = Util.make(HashMap.newHashMap(8), (map) -> {
-        map.put(Trackers.TIMES_DROPPED, StrangeItemsClient.show_times_dropped);
-    });
-
-
-    public static void define_map_keybind(MapTracker tracker, KeyMapping key) {
-        MAP_TRACKER_KEYBINDINGS.put(tracker, key);
-    }
-
-    public static void define_timestamp_keybind(TimestampTracker tracker, KeyMapping key) {
-        TIMESTAMP_TRACKER_KEYBINDINGS.put(tracker, key);
-    }
-
-    public static KeyMapping get_map_keybind(MapTracker tracker) {
-        if (MAP_TRACKER_KEYBINDINGS.containsKey(tracker)) {
-            return MAP_TRACKER_KEYBINDINGS.get(tracker);
-        }
-        if (!WARNED_KEYBINDINGS.contains(tracker)) {
-            StrangeItems.LOGGER.warn("Tracker " + tracker.getId().toString() + " does not have an assigned key binding!");
-            WARNED_KEYBINDINGS.add(tracker);
-        }
+    public static KeyMapping get_map_keybind(LegacyMapTracker tracker) {
         return FALLBACK_KEYBINDING;
     }
 
-    public static KeyMapping get_timestamp_keybind(TimestampTracker tracker) {
-        if (TIMESTAMP_TRACKER_KEYBINDINGS.containsKey(tracker)) {
-            return TIMESTAMP_TRACKER_KEYBINDINGS.get(tracker);
-        }
-        if (!WARNED_KEYBINDINGS.contains(tracker)) {
-            StrangeItems.LOGGER.warn("Tracker " + tracker.getId().toString() + " does not have an assigned key binding!");
-            WARNED_KEYBINDINGS.add(tracker);
-        }
+    public static KeyMapping get_timestamp_keybind(LegacyTimestampTracker tracker) {
         return FALLBACK_KEYBINDING;
     }
 }

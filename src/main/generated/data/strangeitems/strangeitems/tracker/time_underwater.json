@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.time_underwater"
+  },
+  "items_to_track": "#strangeitems:trackers/time_underwater",
+  "save_id": "strangeitems:time_underwater",
+  "trigger": "strangeitems:tick/underwater",
+  "value_formatter": "minecraft:time"
+}

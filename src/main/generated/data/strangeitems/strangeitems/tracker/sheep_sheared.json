@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.sheep_sheared"
+  },
+  "items_to_track": "#strangeitems:trackers/sheep_sheared",
+  "save_id": "strangeitems:sheep_sheared",
+  "trigger": "strangeitems:shear_sheep"
+}

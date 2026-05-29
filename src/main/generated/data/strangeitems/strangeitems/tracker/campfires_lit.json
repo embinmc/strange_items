@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.campfires_lit"
+  },
+  "items_to_track": "#strangeitems:trackers/campfires_lit",
+  "save_id": "strangeitems:campfires_lit",
+  "trigger": "strangeitems:relight_campfire"
+}

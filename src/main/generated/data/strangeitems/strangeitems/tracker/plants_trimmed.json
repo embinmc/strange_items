@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.plants_trimmed"
+  },
+  "items_to_track": "#strangeitems:trackers/plants_trimmed",
+  "save_id": "strangeitems:plants_trimmed",
+  "trigger": "strangeitems:trim_plant"
+}

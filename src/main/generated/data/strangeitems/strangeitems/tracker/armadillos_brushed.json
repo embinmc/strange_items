@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.armadillos_brushed"
+  },
+  "items_to_track": "#strangeitems:trackers/armadillos_brushed",
+  "save_id": "strangeitems:armadillos_brushed",
+  "trigger": "strangeitems:brush_armadillo"
+}

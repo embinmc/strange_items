@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.paths_created"
+  },
+  "items_to_track": "#strangeitems:trackers/paths_created",
+  "save_id": "strangeitems:paths_created",
+  "trigger": "strangeitems:create_path_block"
+}

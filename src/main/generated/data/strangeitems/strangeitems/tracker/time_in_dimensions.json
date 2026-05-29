@@ -1,0 +1,13 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.time_in_dimensions"
+  },
+  "items_to_track": "#strangeitems:trackers/time_in_dimensions",
+  "map_save_id": "strangeitems:time_in_dimensions_map",
+  "save_id": "strangeitems:time_in_dimensions",
+  "translation_prefix": "dimension",
+  "trigger": "strangeitems:tick",
+  "value_formatter": "minecraft:time"
+}

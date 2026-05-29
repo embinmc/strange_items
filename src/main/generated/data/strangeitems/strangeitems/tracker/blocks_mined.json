@@ -1,0 +1,12 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.blocks_mined"
+  },
+  "items_to_track": "#strangeitems:trackers/blocks_mined",
+  "map_save_id": "strangeitems:blocks_mined_map",
+  "save_id": "strangeitems:blocks_mined",
+  "translation_prefix": "block",
+  "trigger": "strangeitems:block_mined"
+}

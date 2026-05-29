@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.trident_thrown"
+  },
+  "items_to_track": "#strangeitems:trackers/trident_thrown",
+  "save_id": "strangeitems:trident_thrown",
+  "trigger": "strangeitems:throw_trident"
+}

@@ -1,0 +1,13 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.damage_taken"
+  },
+  "items_to_track": "#strangeitems:trackers/damage_taken",
+  "map_save_id": "strangeitems:damage_taken_map",
+  "save_id": "strangeitems:damage_taken",
+  "translation_prefix": "damage_type",
+  "trigger": "strangeitems:take_damage",
+  "value_formatter": "minecraft:divide_by_ten"
+}

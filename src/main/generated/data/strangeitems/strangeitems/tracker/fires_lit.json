@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.fires_lit"
+  },
+  "items_to_track": "#strangeitems:trackers/fires_lit",
+  "save_id": "strangeitems:fires_lit",
+  "trigger": "strangeitems:ignite_fire"
+}

@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.logs_stripped"
+  },
+  "items_to_track": "#strangeitems:trackers/logs_stripped",
+  "save_id": "strangeitems:logs_stripped",
+  "trigger": "strangeitems:strip_block_with_axe"
+}

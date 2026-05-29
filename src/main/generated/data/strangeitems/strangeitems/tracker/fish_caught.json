@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.fish_caught"
+  },
+  "items_to_track": "#strangeitems:trackers/fishing_rod",
+  "save_id": "strangeitems:fish_caught",
+  "trigger": "strangeitems:catch_fish_with_fishing_rod"
+}
