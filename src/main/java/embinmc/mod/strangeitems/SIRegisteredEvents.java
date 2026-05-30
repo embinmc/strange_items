@@ -2,23 +2,19 @@ package embinmc.mod.strangeitems;
 
 import embinmc.mod.strangeitems.event.ServerPlayerEvents;
 import embinmc.mod.strangeitems.event.TrackerEvents;
-import embinmc.mod.strangeitems.tracker.Tracker;
 import embinmc.mod.strangeitems.tracker.Trigger;
 import embinmc.mod.strangeitems.util.ElytraTrackerFix;
 import embinmc.mod.strangeitems.util.Id;
 import embinmc.mod.strangeitems.util.StrangeDataFixer;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 import java.util.Comparator;
 import java.util.List;
@@ -40,23 +36,16 @@ public final class SIRegisteredEvents {
                 ItemStack headStack = player.getItemBySlot(EquipmentSlot.HEAD);
                 ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
                 ItemStack legsStack = player.getItemBySlot(EquipmentSlot.LEGS);
+                ItemStack footStack = player.getItemBySlot(EquipmentSlot.FEET);
 
-                if (!headStack.isEmpty()) {
-                    if (player.isEyeInFluid(FluidTags.WATER)) {
-                        Trigger.TICK_UNDERWATER.appendWithDimension(player, headStack);
-                    }
-                }
-                if (!chestStack.isEmpty()) {
-                    if (player.isInLava()) {
-                        Trigger.TICK_IN_LAVA.appendWithDimension(player, chestStack);
-                    }
-                }
-                if (!legsStack.isEmpty()) {
-                    Trigger.TICK.appendWithDimension(player, legsStack);
-                    if (player.isDiscrete()) {
-                        Trigger.TICK_SNEAK.appendWithDimension(player, legsStack);
-                    }
-                }
+                Trigger.TICK_WEAR_ARMOR.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isEyeInFluid(FluidTags.WATER))
+                    Trigger.TICK_UNDERWATER.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isInLava())
+                    Trigger.TICK_IN_LAVA.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isDiscrete())
+                    Trigger.TICK_SNEAK.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+
                 if (player.isFallFlying()) {
                     List<EquipmentSlot> slotsWithGlider = EquipmentSlot.VALUES.stream()
                             .filter(slot -> LivingEntity.canGlideUsing(player.getItemBySlot(slot), slot))

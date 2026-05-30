@@ -123,6 +123,8 @@ public class TrackerDataProvider extends FabricDynamicRegistryProvider {
         registerBasic(c, Trackers.TIME_SNEAKING, Trigger.TICK_SNEAK, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_SNEAKING);
         registerBasic(c, Trackers.DISTANCE_FALLEN, Trigger.FALL, StatFormatters.DISTANCE, TrackerItemTags.TRACKER_DISTANCE_FALLEN);
         registerBasic(c, Trackers.TIME_IN_LAVA, Trigger.TICK_SNEAK, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_IN_LAVA);
-        registerIdMap(c, Trackers.TIME_IN_DIMENSIONS, Trigger.TICK, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_IN_DIMENSIONS, "dimension");
+        registerIdMap(c, Trackers.TIME_IN_DIMENSIONS, Trigger.TICK_WEAR_ARMOR, StatFormatters.TIME, TrackerItemTags.TRACKER_TIME_IN_DIMENSIONS, "dimension");
+
+        registerIdMap(c, Trackers.DAMAGE_BLOCKED, Trigger.DAMAGE_BLOCKED_BY_SHIELD, StatFormatters.DIVIDE_BY_TEN, TrackerItemTags.TRACKER_SHIELD);
     }
 }

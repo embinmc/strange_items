@@ -14,7 +14,7 @@ public class Trigger {
     public static final Trigger NEVER = register("never");
     public static final Trigger BLOCK_MINED = register("block_mined");
     public static final Trigger ITEM_DROPPED = register("item_dropped");
-    public static final Trigger TICK = register("tick");
+    public static final Trigger TICK_WEAR_ARMOR = register("tick/wear_armor");
     public static final Trigger TICK_UNDERWATER = register("tick/underwater");
     public static final Trigger TICK_IN_LAVA = register("tick/in_lava");
     public static final Trigger TICK_SNEAK = register("tick/sneak");
@@ -53,6 +53,8 @@ public class Trigger {
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int amount, final @Nullable Identifier data) {
+        if (itemStack.isEmpty())
+            return;
         Registry<Tracker> registry = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
         registry.stream().filter(tracker -> tracker.getTrigger() == this).forEach(tracker -> {
             tracker.appendWithData(registryAccess, itemStack, amount, data);
@@ -63,7 +65,22 @@ public class Trigger {
         this.appendWithData(registryAccess, itemStack, 1, null);
     }
 
+    /// Appends tracker to stack with an amount of 1, and the supplied data being the ID of the supplied entity's current dimension.
     public void appendWithDimension(final Entity entity, final ItemStack itemStack) {
         this.appendWithData(entity.registryAccess(), itemStack, 1, entity.level().dimension().identifier());
+    }
+
+    public void appendWithDimension(final Entity entity, final ItemStack... itemStacks) {
+        if (itemStacks.length < 1)
+            return;
+        RegistryAccess registryAccess = entity.registryAccess();
+        Registry<Tracker> registry = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
+        registry.stream().filter(tracker -> tracker.getTrigger() == this).forEach(tracker -> {
+            for (ItemStack itemStack : itemStacks) {
+                if (itemStack.isEmpty())
+                    continue;
+                tracker.appendWithData(registryAccess, itemStack, 1, entity.level().dimension().identifier());
+            }
+        });
     }
 }

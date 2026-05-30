@@ -39,6 +39,8 @@ public class Trackers {
     public static final ResourceKey<Tracker> TIME_IN_LAVA = tracker("time_in_lava");
     public static final ResourceKey<Tracker> TIME_IN_DIMENSIONS = tracker("time_in_dimensions");
 
+    public static final ResourceKey<Tracker> DAMAGE_BLOCKED = tracker("damage_blocked");
+
     private static ResourceKey<Tracker> tracker(String id) {
         return ResourceKey.create(StrangeRegistryKeys.TRACKER_NEW, Id.of(id));
     }

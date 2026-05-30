@@ -15,12 +15,12 @@ public interface StatFormatters {
     StatFormatter DIVIDE_BY_TEN_VANILLA = registerVanilla("divide_by_ten", StatFormatter.DIVIDE_BY_TEN);
     StatFormatter DISTANCE = registerVanilla("distance", StatFormatter.DISTANCE);
     StatFormatter TIME = registerVanilla("time", StatFormatter.TIME);
-    StatFormatter DIVIDE_BY_TEN = register("divide_by_ten", value -> "%,2f".formatted(value / 10f));
+    StatFormatter DIVIDE_BY_TEN = register("divide_by_ten", value -> "%,.2f".formatted(value / 10f));
     StatFormatter HOURS = register("hours", value -> {
         double seconds = value / 20D;
         double minutes = seconds / 60D;
         double hours = minutes / 60D;
-        return "%,2f h".formatted(hours);
+        return "%,.2f h".formatted(hours);
     });
     StatFormatter TIMESTAMP = register("timestamp", value -> TimestampTracker.DATE_FORMAT.format(Date.from(Instant.ofEpochSecond(value))));
 
