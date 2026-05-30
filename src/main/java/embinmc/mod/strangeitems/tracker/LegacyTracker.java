@@ -3,7 +3,6 @@ package embinmc.mod.strangeitems.tracker;
 import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
-import embinmc.mod.strangeitems.event.TrackerEvents;
 import embinmc.mod.strangeitems.util.Id;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.minecraft.ChatFormatting;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * Base Tracker class
  */
-// TODO: rewrite all this dog shit
+@Deprecated(forRemoval = true)
 public class LegacyTracker {
     // god this code is a mess
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyTracker.class);
@@ -85,7 +84,7 @@ public class LegacyTracker {
     }
 
     public Identifier getId() {
-        Identifier id = StrangeRegistries.TRACKER.getKey(this);
+        Identifier id = StrangeRegistries.LEGACY_TRACKER.getKey(this);
         if (id != null) return id;
         return Id.of(this.id);
     }
@@ -152,7 +151,7 @@ public class LegacyTracker {
 
     protected MutableComponent getNameForTooltip() {
         if (StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
-            Identifier id = StrangeRegistries.TRACKER.getKey(this);
+            Identifier id = StrangeRegistries.LEGACY_TRACKER.getKey(this);
             if (id != null) {
                 return Component.literal(id.toString()).withStyle(ChatFormatting.DARK_GRAY);
             } else {
@@ -199,6 +198,6 @@ public class LegacyTracker {
     }
 
     public boolean isIn(TagKey<LegacyTracker> tag) {
-        return StrangeRegistries.TRACKER.wrapAsHolder(this).is(tag);
+        return StrangeRegistries.LEGACY_TRACKER.wrapAsHolder(this).is(tag);
     }
 }

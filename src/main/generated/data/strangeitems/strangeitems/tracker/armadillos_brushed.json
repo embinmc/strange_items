@@ -4,7 +4,7 @@
     "color": "gray",
     "translate": "tracker.strangeitems.armadillos_brushed"
   },
-  "items_to_track": "#strangeitems:trackers/armadillos_brushed",
+  "items_to_track": "#strangeitems:trackers/brush",
   "save_id": "strangeitems:armadillos_brushed",
   "trigger": "strangeitems:brush_armadillo"
 }

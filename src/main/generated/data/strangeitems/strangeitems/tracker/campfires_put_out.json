@@ -4,7 +4,7 @@
     "color": "gray",
     "translate": "tracker.strangeitems.campfires_put_out"
   },
-  "items_to_track": "#strangeitems:trackers/campfires_put_out",
+  "items_to_track": "#strangeitems:trackers/shovel",
   "save_id": "strangeitems:campfires_put_out",
   "trigger": "strangeitems:put_out_campfire"
 }

@@ -8,6 +8,6 @@
   "map_save_id": "strangeitems:time_in_dimensions_map",
   "save_id": "strangeitems:time_in_dimensions",
   "translation_prefix": "dimension",
-  "trigger": "strangeitems:tick",
+  "trigger": "strangeitems:tick/wear_armor",
   "value_formatter": "minecraft:time"
 }

@@ -10,11 +10,8 @@ import net.minecraft.stats.StatFormatter;
 
 public class StrangeRegistries {
 
-    /**
-     * Registry containing all registered trackers.
-     * @see Trackers
-     */
-    public static final Registry<LegacyTracker> TRACKER = FabricRegistryBuilder.create(
+    @Deprecated(forRemoval = true)
+    public static final Registry<LegacyTracker> LEGACY_TRACKER = FabricRegistryBuilder.create(
             StrangeRegistryKeys.TRACKER
     ).attribute(RegistryAttribute.OPTIONAL).buildAndRegister();
 

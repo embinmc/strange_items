@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 
-// TODO: rewrite all this dog shit
+@Deprecated(forRemoval = true)
 public class LegacyTimestampTracker extends LegacyTracker {
     public String map_id;
     public LegacyTimestampTracker(String id) {

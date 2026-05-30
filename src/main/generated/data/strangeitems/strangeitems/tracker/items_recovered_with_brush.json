@@ -1,0 +1,12 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "color": "gray",
+    "translate": "tracker.strangeitems.items_recovered_with_brush"
+  },
+  "items_to_track": "#strangeitems:trackers/brush",
+  "map_save_id": "strangeitems:items_recovered_with_brush_map",
+  "save_id": "strangeitems:items_recovered_with_brush",
+  "translation_prefix": "item",
+  "trigger": "strangeitems:brush_block_succeeds"
+}

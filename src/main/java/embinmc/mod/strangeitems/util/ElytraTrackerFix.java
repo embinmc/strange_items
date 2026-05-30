@@ -8,10 +8,6 @@ public class ElytraTrackerFix implements StrangeDataFixer {
 
     @Override
     public void fix(int dataVersion, @NonNull CompoundTag tag) {
-        if (dataVersion > this.targetDataVersion()) {
-            StrangeDataFixer.tryWarn("wanted data version less than 1, got {}", dataVersion);
-            return;
-        }
         if (!tag.contains(STAT_FIELD)) {
             StrangeDataFixer.tryWarn("wanted tag with field " + STAT_FIELD);
             return;

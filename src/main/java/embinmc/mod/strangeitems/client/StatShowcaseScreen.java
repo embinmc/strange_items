@@ -79,7 +79,7 @@ public class StatShowcaseScreen extends Screen {
         this.addRenderableWidget(new StringWidget(x, y, 64, 10, Component.translatable("container.enderchest"), this.minecraft.font));
         y += 10;
         slot = 0;
-        for (ItemStack itemStack : this.minecraft.getSingleplayerServer().getPlayerList().getPlayer(this.player.getUUID()).getEnderChestInventory()) {
+        for (ItemStack itemStack : this.player.getEnderChestInventory()) {
             ItemStackButton button = new ItemStackButton(x, y, itemStack, onPress, this);
             this.addRenderableWidget(button);
             x += 18;

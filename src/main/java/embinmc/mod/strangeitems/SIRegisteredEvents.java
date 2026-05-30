@@ -24,6 +24,7 @@ public final class SIRegisteredEvents {
     public static final Identifier ENTITY_ATTACKED = Id.of("mobs_hit_tracker");
     public static final Identifier PLAYER_DROP_ITEM = Id.of("player_drop_item");
     public static final Identifier PLAYER_TICK = Id.of("player_tick");
+    public static final Identifier PLAYER_JUMP = Id.of("player_jump");
 
     public static void registerEvents() {
         PlayerBlockBreakEvents.AFTER.register(BLOCK_MINED, (level, player, blockPos, blockState, blockEntity) -> {
@@ -64,6 +65,18 @@ public final class SIRegisteredEvents {
             return InteractionResult.PASS;
         });
 
+        ServerPlayerEvents.ON_JUMP.register(PLAYER_JUMP, player -> {
+            if (!player.isSpectator() || !player.touchingUnloadedChunk()) {
+                ItemStack headStack = player.getItemBySlot(EquipmentSlot.HEAD);
+                ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
+                ItemStack legsStack = player.getItemBySlot(EquipmentSlot.LEGS);
+                ItemStack footStack = player.getItemBySlot(EquipmentSlot.FEET);
+
+                Trigger.JUMP.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+            }
+            return InteractionResult.PASS;
+        });
+
         StrangeDataFixer.register(new ElytraTrackerFix());
 
         TrackerEvents.WRITE_NBT.register(Id.of("data_fix"), (registryAccess, tracker, itemStack, nbt) -> {
@@ -72,7 +85,11 @@ public final class SIRegisteredEvents {
                 return true;
             StrangeDataFixer.FIXERS.stream()
                     .sorted(Comparator.comparingInt(StrangeDataFixer::targetDataVersion))
-                    .forEach(dataFixer -> dataFixer.fix(dataVersion, nbt));
+                    .forEach(dataFixer -> {
+                        if (dataVersion > dataFixer.targetDataVersion())
+                            return;
+                        dataFixer.fix(dataVersion, nbt);
+                    });
             nbt.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
             return true;
         });

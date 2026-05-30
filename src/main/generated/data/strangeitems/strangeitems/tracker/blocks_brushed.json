@@ -4,7 +4,7 @@
     "color": "gray",
     "translate": "tracker.strangeitems.blocks_brushed"
   },
-  "items_to_track": "#strangeitems:trackers/blocks_brushed",
+  "items_to_track": "#strangeitems:trackers/brush",
   "save_id": "strangeitems:blocks_brushed",
   "trigger": "strangeitems:attempt_brush_block"
 }

@@ -3,6 +3,7 @@ package embinmc.mod.strangeitems.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
+import embinmc.mod.strangeitems.network.ClientboundSyncEnderChestPacket;
 import embinmc.mod.strangeitems.tracker.Tracker;
 import embinmc.mod.strangeitems.util.Id;
 import net.fabricmc.api.ClientModInitializer;
@@ -12,6 +13,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -84,5 +86,7 @@ public class StrangeItemsClient implements ClientModInitializer {
                 return Command.SINGLE_SUCCESS;
             }));
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(ClientboundSyncEnderChestPacket.TYPE, ClientboundSyncEnderChestPacket::listen);
     }
 }

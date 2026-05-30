@@ -127,15 +127,6 @@ public class StrangeUtil {
         return result;
     }
 
-    public static List<LegacyTracker> getListOfTrackers() {
-        return StrangeRegistries.TRACKER.stream().toList();
-    }
-
-    @Deprecated
-    public static List<Identifier> get_list_of_ids() {
-        return StrangeRegistries.TRACKER.keySet().stream().toList();
-    }
-
     public static HolderSet<Tracker> getTooltipOrder(HolderLookup.@Nullable Provider registries, TagKey<Tracker> tag) {
         if (registries != null) {
             Optional<HolderSet.Named<Tracker>> optional = registries.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW).get(tag);

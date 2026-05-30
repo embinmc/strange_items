@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
  * Class containing all default registered trackers.
  */
 public class Trackers {
+    // pre 2.0
     public static final ResourceKey<Tracker> BLOCKS_MINED = tracker("blocks_mined");
     public static final ResourceKey<Tracker> TIME_FLOWN_WITH_ELYTRA = tracker("time_flown_with_elytra");
     public static final ResourceKey<Tracker> TIMES_DROPPED = tracker("times_dropped");
@@ -39,7 +40,10 @@ public class Trackers {
     public static final ResourceKey<Tracker> TIME_IN_LAVA = tracker("time_in_lava");
     public static final ResourceKey<Tracker> TIME_IN_DIMENSIONS = tracker("time_in_dimensions");
 
+    // post 2.0
     public static final ResourceKey<Tracker> DAMAGE_BLOCKED = tracker("damage_blocked");
+    public static final ResourceKey<Tracker> PUMPKINS_CARVED = tracker("pumpkins_carved");
+    public static final ResourceKey<Tracker> ITEMS_RECOVERED_WITH_BRUSH = tracker("items_recovered_with_brush");
 
     private static ResourceKey<Tracker> tracker(String id) {
         return ResourceKey.create(StrangeRegistryKeys.TRACKER_NEW, Id.of(id));

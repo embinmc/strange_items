@@ -1,22 +1,19 @@
 {
   "values":[
+    "#strangeitems:trackers/bow",
+    "#strangeitems:trackers/brush",
     "#minecraft:swords",
     "#minecraft:pickaxes",
     "#minecraft:axes",
-    "#minecraft:shovels",
-    "#minecraft:hoes",
+    "#strangeitems:trackers/shovel",
+    "#strangeitems:trackers/hoe",
     "minecraft:mace",
-    "minecraft:bow",
-    "minecraft:flint_and_steel",
-    "minecraft:shears",
-    "minecraft:elytra",
     "minecraft:trident",
-    "minecraft:brush",
-    "minecraft:fishing_rod",
-    "#minecraft:head_armor",
-    "#minecraft:chest_armor",
-    "#minecraft:leg_armor",
-    "#minecraft:foot_armor",
-    "minecraft:crossbow"
+    "#strangeitems:trackers/equippable",
+    "#strangeitems:trackers/igniter",
+    "#strangeitems:trackers/shears",
+    "#strangeitems:trackers/glider",
+    "#strangeitems:trackers/fishing_rod",
+    "#strangeitems:trackers/shield"
   ]
 }

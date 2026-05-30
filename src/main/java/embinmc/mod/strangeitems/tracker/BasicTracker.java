@@ -26,8 +26,4 @@ public class BasicTracker extends Tracker {
     public TrackerType<?> getType() {
         return TrackerType.BASIC;
     }
-
-    @Override
-    public void writeToNbt(CompoundTag nbt, int count, @Nullable Identifier data) {
-    }
 }
