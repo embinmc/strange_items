@@ -4,22 +4,15 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeItemsComponents;
-import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
-import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.mixin.KeyBindAccessor;
-import embinmc.mod.strangeitems.tracker.LegacyTracker;
 import embinmc.mod.strangeitems.tracker.Tracker;
-import embinmc.mod.strangeitems.tracker.TrackerTags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -29,21 +22,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class StrangeUtil {
+    public static final boolean OLD_SORT = false;
+
     public static final Identifier COLLECTORS_ITEM  = Id.of("collectors_item");
     public static final Identifier HAS_ALL_TRACKERS = Id.of("has_all_trackers");
     public static final Identifier DATA_VERSION     = Id.of("data_version");
@@ -54,15 +46,17 @@ public class StrangeUtil {
 
     /**
      * Gets the keys from an NBT Compound, sorted from the highest to lowest value.
-     * @param nbtCompound An NBT Compound where each value is an integer.
+     * @param nbt An NBT Compound where each value is an integer.
      * @return The sorted keys of the given NBT Compound.
      */
-    public static List<String> getSortedKeys(CompoundTag nbtCompound) {
+    public static List<String> getSortedKeys(CompoundTag nbt) {
+        if (!OLD_SORT)
+            return nbt.keySet().stream().sorted(Comparator.comparingInt(o -> nbt.getIntOr(o, 0))).toList();
         List<String> sorted = new java.util.ArrayList<>(List.of());
-        List<String> unsorted = nbtCompound.keySet().stream().toList();
+        List<String> unsorted = nbt.keySet().stream().toList();
         for (String key : unsorted) {
            sorted.add(key);
-           int value = nbtCompound.getIntOr(key, 0);
+           int value = nbt.getIntOr(key, 0);
            if (sorted.size() > 1) {
                while (true) {
                    int index = sorted.indexOf(key);
@@ -72,7 +66,7 @@ public class StrangeUtil {
                    } catch (IndexOutOfBoundsException e) {
                        break;
                    }
-                   int value_ahead = nbtCompound.getInt(key_ahead).orElseThrow();
+                   int value_ahead = nbt.getInt(key_ahead).orElseThrow();
                    if (value > value_ahead) {
                        sorted.remove(index);
                        sorted.add(index - 1, key);

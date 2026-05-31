@@ -18,8 +18,8 @@ public class FishingBobberMixin {
     @Inject(method = "retrieve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setDeltaMovement(DDD)V"))
     public void bobberMixin(ItemStack rod, CallbackInfoReturnable<Integer> cir, @Local(name = "itemStack") ItemStack itemStack, @Local(name = "owner") Player owner) {
         Identifier caughtId = itemStack.typeHolder().unwrapKey().orElseThrow().identifier();
-        Trigger.CATCH_ITEM_WITH_FISHING_ROD.appendWithData(owner.registryAccess(), rod, 1, caughtId);
+        Trigger.CATCH_ITEM_WITH_FISHING_ROD.appendWithData(owner.registryAccess(), rod, itemStack.count(), caughtId);
         if (itemStack.is(ItemTags.FISHES))
-            Trigger.CATCH_FISH_WITH_FISHING_ROD.appendWithData(owner.registryAccess(), rod, 1, caughtId);
+            Trigger.CATCH_FISH_WITH_FISHING_ROD.appendWithData(owner.registryAccess(), rod, itemStack.count(), caughtId);
     }
 }

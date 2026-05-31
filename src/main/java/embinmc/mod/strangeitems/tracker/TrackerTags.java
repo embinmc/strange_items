@@ -9,8 +9,6 @@ public class TrackerTags {
         return TagKey.create(StrangeRegistryKeys.TRACKER_NEW, Id.of(name));
     }
 
-    public static final TagKey<Tracker> HAS_SPECIAL_TOOLTIP = createTag("has_special_tooltip");
-    public static final TagKey<Tracker> MAP_TRACKERS = createTag("map_trackers");
-    public static final TagKey<Tracker> TIMESTAMP_TRACKERS = createTag("timestamp_trackers");
     public static final TagKey<Tracker> TOOLTIP_ORDER = createTag("tooltip_order");
+    public static final TagKey<Tracker> MENU_ORDER = createTag("menu_order");
 }

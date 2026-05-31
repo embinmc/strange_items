@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -18,18 +19,20 @@ public class StatShowcaseScreen extends Screen {
     public static final Component SEARCH_BAR_HINT = Component.translatable("screens.strangeitems.stat_showcase.search_bar_hint");
     protected final LocalPlayer player;
     protected final @NonNull ClientLevel level;
+    protected final @Nullable ItemStack initialStack;
     protected EditBox searchBar;
     protected TrackerListWidget trackerListWidget;
 
-    protected StatShowcaseScreen() {
+    public StatShowcaseScreen(@Nullable ItemStack initialStack) {
         super(TITLE);
         this.player = this.minecraft.player;
         this.level = Objects.requireNonNull(this.minecraft.level);
+        this.initialStack = initialStack;
     }
 
     @Override
     protected void init() {
-        if (this.player == null || this.player.getActiveItem().isEmpty()) {
+        if (this.player == null) {
             this.minecraft.gui.setScreen(null);
             return;
         }
@@ -39,7 +42,8 @@ public class StatShowcaseScreen extends Screen {
         this.searchBar.setX(TrackerListWidget.WIDTH);
         this.searchBar.setWidth(this.width - TrackerListWidget.WIDTH);
         this.addRenderableWidget(this.searchBar);
-        this.trackerListWidget = new TrackerListWidget(this.player, this.player.getActiveItem(), this.minecraft, this.width, 40, 16);
+        ItemStack itemStack2 = this.initialStack == null ? this.player.getActiveItem() : this.initialStack;
+        this.trackerListWidget = new TrackerListWidget(this, itemStack2, this.width, 40, 16);
         this.addRenderableWidget(this.trackerListWidget);
         this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
 
@@ -51,9 +55,10 @@ public class StatShowcaseScreen extends Screen {
         boolean onHotbar = true;
         ItemStackButton.OnPressStack onPress = button -> {
             this.removeWidget(this.trackerListWidget);
-            this.trackerListWidget = new TrackerListWidget(this.player, button.getItemStack(), this.minecraft, this.width, 40, 16);
+            this.trackerListWidget = new TrackerListWidget(this, button.getItemStack(), this.width, 40, 16);
             this.addRenderableWidget(this.trackerListWidget);
             this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
+            this.trackerListWidget.reupdateWithSearch(this.searchBar.getValue());
         };
         for (ItemStack itemStack : this.player.getInventory()) {
             if (slot == Inventory.SLOT_SADDLE || slot == Inventory.SLOT_BODY_ARMOR) {

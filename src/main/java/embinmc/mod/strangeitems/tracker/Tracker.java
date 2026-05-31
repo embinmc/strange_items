@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
+import embinmc.mod.strangeitems.client.StatShowcaseScreen;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
 import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
@@ -214,26 +215,42 @@ public abstract class Tracker {
         }
         if (!StrangeOptions.showTrackersInTooltip() || !itemStack.has(DataComponents.CUSTOM_DATA))
             return;
-        CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-        int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+
+        if (StrangeUtil.isKeyDown(StrangeItemsClient.SHOW_TRACKER_SCREEN)) {
+            Minecraft.getInstance().setScreenAndShow(new StatShowcaseScreen(itemStack));
+        }
+
         List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
         trackersToShow = trackersToShow.stream()
                 .filter(trackerHolder -> StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(itemStack.typeHolder(), trackerHolder))
                 .toList();
         if (trackersToShow.isEmpty())
-            return;
-        list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY));
+            return; // ignore further logic if no trackers.
+
+        CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+        list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY)); // header
         trackerAddIndex[0] += 1;
-        if (dataVersion < StrangeItems.DATA_VERSION) {
+        if (dataVersion < StrangeItems.DATA_VERSION) { // old data version warning
             List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 140, Style.EMPTY);
             lines.forEach(line -> {
                 list.add(trackerAddIndex[0], Component.literal(line.getString()).withStyle(ChatFormatting.RED));
                 trackerAddIndex[0] += 1;
             });
         }
-        for (Holder<Tracker> trackerHolder : trackersToShow) {
+        Consumer<Holder<Tracker>> addToTooltip = trackerHolder -> {
             Tracker tracker = trackerHolder.value();
             list.addAll(trackerAddIndex[0], tracker.getTooltip(tooltipContext.registries(), itemStack));
+            trackerAddIndex[0]++;
+        };
+        HolderSet<Tracker> tooltipOrder = StrangeUtil.getTooltipOrder(tooltipContext.registries(), TrackerTags.TOOLTIP_ORDER);
+        for (Holder<Tracker> trackerHolder : tooltipOrder) {
+            if (trackersToShow.contains(trackerHolder))
+                addToTooltip.accept(trackerHolder);
+        }
+        for (Holder<Tracker> trackerHolder : trackersToShow) {
+            if (!tooltipOrder.contains(trackerHolder))
+                addToTooltip.accept(trackerHolder);
         }
     }
 }

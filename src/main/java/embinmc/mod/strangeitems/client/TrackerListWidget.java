@@ -1,14 +1,19 @@
 package embinmc.mod.strangeitems.client;
 
-import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.tracker.MapLikeTracker;
 import embinmc.mod.strangeitems.tracker.Tracker;
 import embinmc.mod.strangeitems.tracker.TrackerTags;
 import embinmc.mod.strangeitems.util.StrangeUtil;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.TextAlignment;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
@@ -16,6 +21,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
@@ -24,36 +30,66 @@ import java.util.List;
 
 public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.TrackerEntry> {
     public static final int WIDTH = 180;
-    final List<TrackerListWidget.TrackerEntry> unfilteredEntries = new ArrayList<>(64);
+    public static final Component EMPTY = Component.translatable("screens.strangeitems.stat_showcase.empty").withStyle(ChatFormatting.GRAY);
+    public static final Component EMPTY_SEARCH = Component.translatable("screens.strangeitems.stat_showcase.empty_search").withStyle(ChatFormatting.GRAY);
+    final Object2IntMap<TrackerEntry> unfilteredEntries = new Object2IntLinkedOpenHashMap<>(64);
     final ItemStack checkingStack;
     final LocalPlayer player;
     final Registry<Tracker> trackerRegistry;
+    public String currentSearchTerm = "";
 
-    public TrackerListWidget(LocalPlayer player, ItemStack itemStack, Minecraft minecraft, int width, int y, int itemHeight) {
-        super(minecraft, width - WIDTH, minecraft.getWindow().getGuiScaledHeight() - 80, y, itemHeight);
+    public TrackerListWidget(StatShowcaseScreen showcaseScreen, ItemStack itemStack, int width, int y, int itemHeight) {
+        super(Minecraft.getInstance(), width - WIDTH, showcaseScreen.height - 80, y, itemHeight);
         this.checkingStack = itemStack;
-        this.player = player;
+        this.player = showcaseScreen.player;
         this.trackerRegistry = this.player.registryAccess().lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
         this.setX(TrackerListWidget.WIDTH);
 
         List<Holder<Tracker>> trackersForItem = StrangeUtil.getTrackersForItem(this.player.registryAccess(), this.checkingStack, true);
-        HolderSet<Tracker> tooltipOrder = StrangeUtil.getTooltipOrder(this.player.registryAccess(), TrackerTags.TOOLTIP_ORDER);
+        HolderSet<Tracker> tooltipOrder = StrangeUtil.getTooltipOrder(this.player.registryAccess(), TrackerTags.MENU_ORDER);
         for (Holder<Tracker> trackerHolder : tooltipOrder) {
             if (trackersForItem.contains(trackerHolder)) {
                 TrackerEntry trackerEntry = new TrackerEntry(trackerHolder.value());
-                this.addEntry(trackerEntry, trackerEntry.getHeight());
+                this.unfilteredEntries.put(trackerEntry, trackerEntry.getHeight());
             }
         }
         for (Holder<Tracker> trackerHolder : trackersForItem) {
             if (!tooltipOrder.contains(trackerHolder)) {
                 TrackerEntry trackerEntry = new TrackerEntry(trackerHolder.value());
-                this.addEntry(trackerEntry, trackerEntry.getHeight());
+                this.unfilteredEntries.put(trackerEntry, trackerEntry.getHeight());
             }
         }
     }
 
     public void reupdateWithSearch(final String search) {
+        this.clearEntries();
+        this.currentSearchTerm = search;
+        if (search.isBlank()) {
+            this.unfilteredEntries.forEach(this::addEntry);
+            return;
+        }
+        List<TrackerEntry> filtered = Util.make(new ArrayList<>(this.unfilteredEntries.size()), list -> {
+            for (TrackerEntry trackerEntry : this.unfilteredEntries.keySet()) {
+                StringBuilder stringBuilder = new StringBuilder();
+                List.copyOf(trackerEntry.lines).stream().map(Component::getString).forEach(stringBuilder::append);
+                String searchString = stringBuilder.toString();
+                if (searchString.contains(search))
+                    list.add(trackerEntry);
+            }
+        });
+        filtered.forEach(trackerEntry -> this.addEntry(trackerEntry, trackerEntry.getHeight()));
+    }
 
+    @Override
+    protected void extractListItems(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        if (this.children().isEmpty()) {
+            int x = this.getX() + (this.getWidth() / 2);
+            int y = this.getY() + (this.getHeight() / 2);
+            Component emptyText = this.currentSearchTerm.isBlank() ? EMPTY : EMPTY_SEARCH;
+            graphics.textRenderer().accept(TextAlignment.CENTER, x, y, emptyText);
+            return;
+        }
+        super.extractListItems(graphics, mouseX, mouseY, a);
     }
 
     public class TrackerEntry extends ObjectSelectionList.Entry<TrackerEntry> {

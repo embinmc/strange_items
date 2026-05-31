@@ -46,12 +46,8 @@ public class StrangeItemsClient implements ClientModInitializer {
         ));
     }
 
-    public static KeyMapping show_tracker_ids = vanillaKeybind("show_tracker_ids", InputConstants.KEY_COMMA);
-    public static KeyMapping show_blocks_mined = vanillaKeybind("show_blocks_mined", InputConstants.KEY_Z);
-    public static KeyMapping show_times_dropped = vanillaKeybind("show_times_dropped", InputConstants.KEY_RALT);
-    public static KeyMapping show_mobs_killed = vanillaKeybind("show_mobs_killed", InputConstants.KEY_LALT);
-    public static KeyMapping show_time_in_dimensions = vanillaKeybind("show_time_in_dimension", InputConstants.KEY_LALT);
-    public static KeyMapping SHOW_SHOTS_HIT = vanillaKeybind("show_shots_hit", InputConstants.KEY_RSHIFT);
+    public static KeyMapping show_tracker_ids = vanillaKeybind("show_tracker_ids", InputConstants.KEY_APOSTROPHE);
+    public static KeyMapping SHOW_TRACKER_SCREEN = vanillaKeybind("show_tracker_screen", InputConstants.KEY_SEMICOLON);
 
     @Override
     public void onInitializeClient() {
@@ -60,10 +56,9 @@ public class StrangeItemsClient implements ClientModInitializer {
         LOGGER.info("Reading config...");
         StrangeConfig.readConfig();
 
-        ClientTickEvents.END_CLIENT_TICK.register(Id.of("test"), minecraft -> {
-            while (show_blocks_mined.consumeClick() && minecraft.level != null) {
-                minecraft.setScreenAndShow(new StatShowcaseScreen());
-            }
+        ClientTickEvents.END_CLIENT_TICK.register(Id.of("open_menu_ingame"), minecraft -> {
+            if (SHOW_TRACKER_SCREEN.consumeClick())
+                minecraft.setScreenAndShow(new StatShowcaseScreen(null));
         });
 
         // Test to make sure my data fix sort logic was good

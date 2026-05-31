@@ -1,6 +1,7 @@
 {
   "values":[
     "#strangeitems:trackers/blocks_mined",
-    "#strangeitems:trackers/weapon"
+    "#strangeitems:trackers/weapon",
+    "minecraft:red_shulker_box"
   ]
 }
