@@ -51,7 +51,7 @@ public class StrangeUtil {
      */
     public static List<String> getSortedKeys(CompoundTag nbt) {
         if (!OLD_SORT)
-            return nbt.keySet().stream().sorted(Comparator.comparingInt(o -> nbt.getIntOr(o, 0))).toList();
+            return nbt.keySet().stream().sorted(Comparator.<String>comparingInt(o -> nbt.getIntOr(o, 0)).reversed()).toList();
         List<String> sorted = new java.util.ArrayList<>(List.of());
         List<String> unsorted = nbt.keySet().stream().toList();
         for (String key : unsorted) {

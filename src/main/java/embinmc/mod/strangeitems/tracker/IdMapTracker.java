@@ -3,6 +3,7 @@ package embinmc.mod.strangeitems.tracker;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -21,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -62,7 +64,8 @@ public class IdMapTracker extends MapLikeTracker {
         if (mapOptional.isEmpty())
             return;
         CompoundTag mapNbt = mapOptional.orElseThrow();
-        for (String key : mapNbt.keySet()) {
+        List<String> sorted = StrangeUtil.getSortedKeys(mapNbt);
+        for (String key : sorted) {
             MutableComponent keyText = this.translationPrefix.isEmpty() ? Component.literal(key) :
                     Component.literal(this.getTranslationKey(key));
             keyText.withStyle(ChatFormatting.GRAY);
