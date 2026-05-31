@@ -58,6 +58,10 @@ dependencies {
 	
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/strangeitems.accesswidener")
+}
+
 processResources {
 	inputs.property "version", project.version
 

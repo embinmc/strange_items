@@ -3,12 +3,14 @@ package embinmc.mod.strangeitems.client;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.EnderChestBlock;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -33,7 +35,7 @@ public class StatShowcaseScreen extends Screen {
     @Override
     protected void init() {
         if (this.player == null) {
-            this.minecraft.gui.setScreen(null);
+            this.onClose();
             return;
         }
         this.searchBar = new EditBox(this.minecraft.font, SEARCH_BAR_HINT);
@@ -65,7 +67,8 @@ public class StatShowcaseScreen extends Screen {
                 slot += 1;
                 continue;
             }
-            ItemStackButton button = new ItemStackButton(x, y, itemStack, onPress, this);
+            EquipmentSlot currentSlot = Inventory.EQUIPMENT_SLOT_MAPPING.get(slot);
+            ItemStackButton button = new ItemStackButton(x, y, itemStack, onPress, this, currentSlot);
             this.addRenderableWidget(button);
             x += 18;
             slot += 1;
@@ -81,7 +84,9 @@ public class StatShowcaseScreen extends Screen {
 
         x = start;
         y += 24;
-        this.addRenderableWidget(new StringWidget(x, y, 64, 10, Component.translatable("container.enderchest"), this.minecraft.font));
+        StringWidget stringWidget = new StringWidget(x, y, 64, 10, EnderChestBlock.CONTAINER_TITLE, this.minecraft.font);
+        stringWidget.setMaxWidth(160, StringWidget.TextOverflow.SCROLLING);
+        this.addRenderableWidget(stringWidget);
         y += 10;
         slot = 0;
         for (ItemStack itemStack : this.player.getEnderChestInventory()) {
@@ -97,7 +102,13 @@ public class StatShowcaseScreen extends Screen {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public boolean keyPressed(@NonNull KeyEvent event) {
+        if (this.searchBar.isFocused())
+            return super.keyPressed(event);
+        if (this.minecraft.options.keyInventory.matches(event)) { // close screen with inventory key
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 }
