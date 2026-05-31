@@ -42,7 +42,9 @@ public class ItemStackButton extends Button {
         else
             this.extractDefaultSprite(graphics);
         if (this.slot != null && this.itemStack.isEmpty()) {
-            Identifier texture = this.slot == EquipmentSlot.OFFHAND ? InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD : InventoryMenu.TEXTURE_EMPTY_SLOTS.get(this.slot);
+            Identifier texture = this.slot == EquipmentSlot.OFFHAND ?
+                    InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD :
+                    InventoryMenu.TEXTURE_EMPTY_SLOTS.get(this.slot);
             if (texture != null)
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX() + 1, this.getY() + 1, this.getWidth() - 2, this.getHeight() - 2, ARGB.white(this.getAlpha()));
         }

@@ -59,6 +59,7 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
                 this.unfilteredEntries.put(trackerEntry, trackerEntry.getHeight());
             }
         }
+        this.reupdateWithSearch(this.currentSearchTerm);
     }
 
     public void reupdateWithSearch(final String search) {
