@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:basic",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.damage_dealt"
   },
   "items_to_track": "#strangeitems:trackers/weapon",

@@ -2,9 +2,8 @@ package embinmc.mod.strangeitems.client.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
-import embinmc.mod.strangeitems.tracker.LegacyTracker;
+
 import java.util.List;
 
 import embinmc.mod.strangeitems.tracker.Tracker;
@@ -12,7 +11,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public record HiddenTrackers(List<Condition> conditions) {
     public static final Codec<HiddenTrackers> CODEC = RecordCodecBuilder.create(h -> h.group(

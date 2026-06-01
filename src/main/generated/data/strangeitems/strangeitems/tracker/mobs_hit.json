@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:basic",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.mobs_hit"
   },
   "items_to_track": "#strangeitems:can_track_stats",

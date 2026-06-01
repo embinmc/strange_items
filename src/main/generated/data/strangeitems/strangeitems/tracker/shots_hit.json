@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:id_map",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.shots_hit"
   },
   "items_to_track": "#strangeitems:trackers/bow",

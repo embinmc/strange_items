@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:id_map",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.times_fishing_rod_caught_something"
   },
   "items_to_track": "#strangeitems:trackers/fishing_rod",

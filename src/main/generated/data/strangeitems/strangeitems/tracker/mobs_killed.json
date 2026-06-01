@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:id_map",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.mobs_killed"
   },
   "items_to_track": "#strangeitems:trackers/mobs_killed",

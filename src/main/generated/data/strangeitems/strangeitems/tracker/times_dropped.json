@@ -1,7 +1,6 @@
 {
   "type": "strangeitems:timestamp",
   "description": {
-    "color": "gray",
     "translate": "tracker.strangeitems.times_dropped"
   },
   "items_to_track": "#strangeitems:can_track_stats",
