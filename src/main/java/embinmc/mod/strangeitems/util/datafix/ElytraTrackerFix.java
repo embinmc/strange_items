@@ -1,4 +1,4 @@
-package embinmc.mod.strangeitems.util;
+package embinmc.mod.strangeitems.util.datafix;
 
 import net.minecraft.nbt.CompoundTag;
 import org.jspecify.annotations.NonNull;

@@ -3,7 +3,6 @@ package embinmc.mod.strangeitems.util;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import embinmc.mod.strangeitems.StrangeItems;
-import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.mixin.KeyBindAccessor;
@@ -130,14 +129,12 @@ public class StrangeUtil {
     }
 
     public static boolean isCollectors(ItemStack itemStack) {
-        if (itemStack.has(StrangeItemsComponents.COLLECTORS_ITEM)) return true;
         if (!itemStack.has(DataComponents.CUSTOM_DATA)) return false;
         CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
         return data != null && data.copyTag().getBooleanOr(COLLECTORS_ITEM_TAG, false);
     }
 
     public static boolean hasAllTrackers(ItemStack itemStack) {
-        if (itemStack.has(StrangeItemsComponents.HAS_ALL_TRACKERS)) return true;
         if (!itemStack.has(DataComponents.CUSTOM_DATA)) return false;
         CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
         return data != null && data.copyTag().getBooleanOr(HAS_ALL_TRACKERS_TAG, false);
@@ -156,7 +153,8 @@ public class StrangeUtil {
         Set<Holder.Reference<Tracker>> trackers = filteredLookup.listElements().collect(Collectors.toUnmodifiableSet());
         CompoundTag nbt = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         for (Holder.Reference<Tracker> tracker : trackers) {
-            if (includeEmpty || nbt.contains(tracker.getRegisteredName()))
+            String saveId = tracker.value().getSaveId().toString();
+            if (includeEmpty || nbt.getIntOr(saveId, 0) > 0)
                 foundTrackers.add(tracker);
         }
         return foundTrackers;

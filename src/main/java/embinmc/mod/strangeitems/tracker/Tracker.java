@@ -77,7 +77,7 @@ public abstract class Tracker {
         if (StrangeUtil.isKeyDown(StrangeItemsClient.show_tracker_ids)) {
             desc = Component.literal(this.getId(provider).toString()).withStyle(ChatFormatting.GRAY);
         } else {
-            desc = this.getRelevantDescription();
+            desc = ComponentUtils.mergeStyles(this.getRelevantDescription(), Style.EMPTY.withColor(ChatFormatting.GRAY));
         }
         Component line = Component.translatable(this.trackerWithValueTranslationKey(), desc, formattedValue).withStyle(ChatFormatting.GRAY);
         return List.of(Component.literal(" ").append(line));
@@ -95,6 +95,10 @@ public abstract class Tracker {
 
     public String getFormattedValue(final int value) {
         return this.statFormatter.format(value);
+    }
+
+    public Identifier getSaveId() {
+        return this.saveId;
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int count, final @Nullable Identifier data) {
@@ -207,18 +211,18 @@ public abstract class Tracker {
             name.withStyle(ChatFormatting.DARK_RED);
             list.set(0, name);
             if (itemStack.has(DataComponents.CUSTOM_NAME)) {
-                MutableComponent name2 = Component.empty().append(itemStack.getItemName());
+                MutableComponent name2 = Component.translatable("tooltip.strangeitems.collectors_item.item_name", itemStack.getItemName());
                 name2.withStyle(ChatFormatting.DARK_RED);
                 list.add(1, name2);
                 trackerAddIndex[0] += 1;
             }
         }
-        if (!StrangeOptions.showTrackersInTooltip() || !itemStack.has(DataComponents.CUSTOM_DATA))
+        if (!itemStack.has(DataComponents.CUSTOM_DATA))
             return;
-
-        if (StrangeUtil.isKeyDown(StrangeItemsClient.SHOW_TRACKER_SCREEN)) {
+        if (StrangeUtil.isKeyDown(StrangeItemsClient.SHOW_TRACKER_SCREEN))
             Minecraft.getInstance().setScreenAndShow(new StatShowcaseScreen(itemStack));
-        }
+        if (!StrangeOptions.showTrackersInTooltip())
+            return;
 
         List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
         trackersToShow = trackersToShow.stream()
@@ -252,5 +256,9 @@ public abstract class Tracker {
             if (!tooltipOrder.contains(trackerHolder))
                 addToTooltip.accept(trackerHolder);
         }
+        MutableComponent keyText = StrangeItemsClient.SHOW_TRACKER_SCREEN.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY);
+        MutableComponent showMoreText = Component.empty().append(" ").append(Component.translatable("tooltip.strangeitems.show_more", keyText));
+        list.add(trackerAddIndex[0], showMoreText.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)); // show more
+        trackerAddIndex[0] += 1;
     }
 }

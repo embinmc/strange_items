@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class MapLikeTracker extends Tracker {
-    protected static final Component PREFIX = Component.literal(" > ").withStyle(ChatFormatting.GRAY);
+    protected static final Component PREFIX = Component.literal("  > ").withStyle(ChatFormatting.GRAY);
     protected static final Component SEP = Component.literal(": ").withStyle(ChatFormatting.GRAY);
     protected final Identifier mapSaveId;
 

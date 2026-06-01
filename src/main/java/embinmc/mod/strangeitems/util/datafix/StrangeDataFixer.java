@@ -1,4 +1,4 @@
-package embinmc.mod.strangeitems.util;
+package embinmc.mod.strangeitems.util.datafix;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;

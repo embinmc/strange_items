@@ -40,12 +40,12 @@ public class StatShowcaseScreen extends Screen {
         }
         this.searchBar = new EditBox(this.minecraft.font, SEARCH_BAR_HINT);
         this.searchBar.setHint(SEARCH_BAR_HINT);
-        this.searchBar.setY(10);
+        this.searchBar.setY(8);
         this.searchBar.setX(TrackerListWidget.WIDTH);
         this.searchBar.setWidth(this.width - TrackerListWidget.WIDTH);
         this.addRenderableWidget(this.searchBar);
         ItemStack itemStack2 = this.initialStack == null ? this.player.getActiveItem() : this.initialStack;
-        this.trackerListWidget = new TrackerListWidget(this, itemStack2, this.width, 40, 16);
+        this.trackerListWidget = new TrackerListWidget(this, itemStack2, this.width, 36, 16);
         this.addRenderableWidget(this.trackerListWidget);
         this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
 

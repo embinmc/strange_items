@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.TrackerEntry> {
     public static final int WIDTH = 180;
@@ -39,7 +40,7 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
     public String currentSearchTerm = "";
 
     public TrackerListWidget(StatShowcaseScreen showcaseScreen, ItemStack itemStack, int width, int y, int itemHeight) {
-        super(Minecraft.getInstance(), width - WIDTH, showcaseScreen.height - 80, y, itemHeight);
+        super(Minecraft.getInstance(), width - WIDTH, showcaseScreen.height - 40, y, itemHeight);
         this.checkingStack = itemStack;
         this.player = showcaseScreen.player;
         this.trackerRegistry = this.player.registryAccess().lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
@@ -72,7 +73,10 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
         List<TrackerEntry> filtered = Util.make(new ArrayList<>(this.unfilteredEntries.size()), list -> {
             for (TrackerEntry trackerEntry : this.unfilteredEntries.keySet()) {
                 StringBuilder stringBuilder = new StringBuilder();
-                List.copyOf(trackerEntry.lines).stream().map(Component::getString).forEach(stringBuilder::append);
+                List.copyOf(trackerEntry.lines).stream()
+                        .map(Component::getString)
+                        .map(string -> string.toLowerCase(Locale.ROOT))
+                        .forEach(stringBuilder::append);
                 String searchString = stringBuilder.toString();
                 if (searchString.contains(search))
                     list.add(trackerEntry);

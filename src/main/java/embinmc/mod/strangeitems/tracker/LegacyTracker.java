@@ -1,6 +1,5 @@
 package embinmc.mod.strangeitems.tracker;
 
-import embinmc.mod.strangeitems.StrangeItemsComponents;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
 import embinmc.mod.strangeitems.util.Id;
@@ -194,7 +193,7 @@ public class LegacyTracker {
     }
 
     public boolean shouldTrack(ItemStack stack) {
-        return stack.is(this.item_tag) || this.stackHasTracker(stack) || stack.has(StrangeItemsComponents.HAS_ALL_TRACKERS);
+        return stack.is(this.item_tag) || this.stackHasTracker(stack);
     }
 
     public boolean isIn(TagKey<LegacyTracker> tag) {

@@ -27,7 +27,6 @@ public class StrangeItems implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		StrangeRegistries.acknowledgeRegistries();
-		StrangeItemsComponents.init();
 
         SIRegisteredEvents.registerEvents();
 

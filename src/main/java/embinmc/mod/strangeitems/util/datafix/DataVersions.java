@@ -1,4 +1,4 @@
-package embinmc.mod.strangeitems.util;
+package embinmc.mod.strangeitems.util.datafix;
 
 public interface DataVersions {
     int PRE_V1_6 = 0;

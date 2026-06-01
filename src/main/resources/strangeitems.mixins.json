@@ -10,6 +10,7 @@
     "BrushableBlockEntityMixin",
     "BrushMixin",
     "CrossbowItemMixin",
+    "DataFixersMixin",
     "EquippableComponentMixin",
     "FishingBobberMixin",
     "FishingRodMixin",
