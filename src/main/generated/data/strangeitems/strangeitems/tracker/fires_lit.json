@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.fires_lit"
+  },
+  "items_to_track": "#strangeitems:trackers/igniter",
+  "save_id": "strangeitems:fires_lit",
+  "trigger": "strangeitems:ignite_fire"
+}

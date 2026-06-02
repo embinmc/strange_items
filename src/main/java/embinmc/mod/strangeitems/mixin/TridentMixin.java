@@ -1,6 +1,6 @@
 package embinmc.mod.strangeitems.mixin;
 
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Trigger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
@@ -14,6 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TridentMixin {
     @Inject(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;pickHighestLevel(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/component/DataComponentType;)Ljava/util/Optional;"))
     public void tridentMixin(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks, CallbackInfoReturnable<Boolean> cir) {
-        Trackers.TRIDENT_THROWN.appendTracker(stack);
+        Trigger.THROW_TRIDENT.appendWithDimension(user, stack);
     }
 }

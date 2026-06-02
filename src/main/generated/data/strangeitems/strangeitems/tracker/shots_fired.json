@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.shots_fired"
+  },
+  "items_to_track": "#strangeitems:trackers/bow",
+  "save_id": "strangeitems:shots_fired",
+  "trigger": "strangeitems:shoot_arrow"
+}

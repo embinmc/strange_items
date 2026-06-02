@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.times_fishing_rod_reeled_in"
+  },
+  "items_to_track": "#strangeitems:trackers/fishing_rod",
+  "save_id": "strangeitems:times_fishing_rod_reeled_in",
+  "trigger": "strangeitems:reel_in_fishing_rod"
+}

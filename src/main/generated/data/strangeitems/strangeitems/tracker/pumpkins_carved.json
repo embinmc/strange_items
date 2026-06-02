@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.pumpkins_carved"
+  },
+  "items_to_track": "#strangeitems:trackers/shears",
+  "save_id": "strangeitems:pumpkins_carved",
+  "trigger": "strangeitems:carve_pumpkin"
+}

@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.plants_trimmed"
+  },
+  "items_to_track": "#strangeitems:trackers/shears",
+  "save_id": "strangeitems:plants_trimmed",
+  "trigger": "strangeitems:trim_plant"
+}

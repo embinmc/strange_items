@@ -2,3 +2,5 @@ accessWidener	v2	official
 
 accessible    field    net/minecraft/registry/SimpleRegistry frozen Z
 accessible field net/minecraft/registry/Registries ROOT Lnet/minecraft/registry/MutableRegistry;
+accessible field net/minecraft/world/inventory/InventoryMenu TEXTURE_EMPTY_SLOTS Ljava/util/Map;
+accessible field net/minecraft/world/level/block/EnderChestBlock CONTAINER_TITLE Lnet/minecraft/network/chat/Component;

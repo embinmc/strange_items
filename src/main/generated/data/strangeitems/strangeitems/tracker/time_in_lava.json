@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.time_in_lava"
+  },
+  "items_to_track": "#strangeitems:trackers/time_in_lava",
+  "save_id": "strangeitems:time_in_lava",
+  "trigger": "strangeitems:tick/sneak",
+  "value_formatter": "minecraft:time"
+}

@@ -49,13 +49,17 @@ dependencies {
         api "com.terraformersmc:modmenu:17.0.0-alpha.1"
     }
 
-	implementation "maven.modrinth:embin-vanilla_options_api:1.1.0-fabric"
-	include "maven.modrinth:embin-vanilla_options_api:1.1.0-fabric"
+	implementation "maven.modrinth:embin-vanilla_options_api:1.2.0-fabric"
+	include "maven.modrinth:embin-vanilla_options_api:1.2.0-fabric"
 
 	// include "${rootProject.projectDir}\\deps\\vanillaoptionsapi-1.0.0.jar"
 
 	implementation 'com.electronwill.night-config:json:3.6.6'
 	
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/strangeitems.accesswidener")
 }
 
 processResources {
@@ -68,6 +72,12 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
+}
+
+fabricApi {
+	configureDataGeneration() {
+		client = true
+	}
 }
 
 java {

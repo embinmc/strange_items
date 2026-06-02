@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "translate": "tracker.strangeitems.mobs_killed"
+  },
+  "items_to_track": "#strangeitems:trackers/mobs_killed",
+  "map_save_id": "strangeitems:mobs_killed_map",
+  "save_id": "strangeitems:mobs_killed",
+  "translation_prefix": "entity",
+  "trigger": "strangeitems:kill_mob"
+}

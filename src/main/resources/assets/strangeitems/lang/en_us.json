@@ -6,7 +6,10 @@
   "tooltip.strangeitems.collectors_item": "Collector's",
   "tooltip.strangeitems.smithing_collectors.base": "Add an item you want to turn into a \"Collector's\" variant",
   "tooltip.strangeitems.smithing_collectors.addition": "Add a copy of the inputted item",
-  "tooltip.strangeitems.old_data_version": "Displayed stats may be inaccurate until one is incremented",
+  "tooltip.strangeitems.old_data_version": "This older item may display inaccurate stats until one is incremented",
+  "tooltip.strangeitems.tracker_with_value": "%1$s: %2$s",
+  "tooltip.strangeitems.no_registries": "No Registries Available",
+  "tooltip.strangeitems.show_more": "Press %s for more info",
 
   "tracker.strangeitems.blocks_mined":"Blocks Mined",
   "tracker.strangeitems.logs_stripped":"Blocks Stripped",
@@ -26,7 +29,6 @@
   "tracker.strangeitems.trident_thrown": "Times Thrown",
   "tracker.strangeitems.blocks_brushed": "Blocks Brushed",
   "tracker.strangeitems.armadillos_brushed": "Armadillos Brushed",
-  "tracker.strangeitems.blocks_mined_map":"Blocks",
   "tracker.strangeitems.mobs_killed":"Mobs Killed",
   "tracker.strangeitems.times_equipped":"Times Equipped",
   "tracker.strangeitems.damage_taken":"Damage Taken",
@@ -40,7 +42,14 @@
   "tracker.strangeitems.time_in_lava":"Time Spent in Lava",
   "tracker.strangeitems.time_in_dimensions":"Time Spent in Dimensions",
 
+  "tracker.strangeitems.damage_blocked": "Damage Blocked",
+  "tracker.strangeitems.pumpkins_carved": "Pumpkins Carved",
+  "tracker.strangeitems.items_recovered_with_brush": "Items Recovered with Brush",
+
   "screens.strangeitems.config": "Strange Items Config",
+  "screens.strangeitems.stat_showcase.search_bar_hint": "Search trackers...",
+  "screens.strangeitems.stat_showcase.empty": "Selected item cannot track stats",
+  "screens.strangeitems.stat_showcase.empty_search": "No trackers found",
   "setting.strangeitems.in_depth_tracking": "In Depth Tracking",
   "setting.strangeitems.in_depth_tracking.desc": "Whether or not the mod should track",
   "setting.strangeitems.in_depth_tracking.desc2": "extra stuff, such as specific blocks broken.",
@@ -59,6 +68,7 @@
   "key.strangeitems.show_shots_hit": "Show Shots Hit (If Available)",
   "key.strangeitems.show_tracker_ids": "Show Tracker IDs",
   "key.strangeitems.debug_list_trackers": "[DEBUG] List registered trackers",
+  "key.strangeitems.show_tracker_screen": "Open Tracker Screen",
   "key.category.strangeitems.keys": "Strange Items",
   "key.category.strangeitems.debug": "Strange Items: Debug Controls",
 

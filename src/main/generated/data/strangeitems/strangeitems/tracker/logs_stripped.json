@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "translate": "tracker.strangeitems.logs_stripped"
+  },
+  "items_to_track": "#strangeitems:trackers/logs_stripped",
+  "map_save_id": "strangeitems:logs_stripped_map",
+  "save_id": "strangeitems:logs_stripped",
+  "translation_prefix": "block",
+  "trigger": "strangeitems:strip_block_with_axe"
+}

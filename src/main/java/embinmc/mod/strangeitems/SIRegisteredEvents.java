@@ -2,10 +2,11 @@ package embinmc.mod.strangeitems;
 
 import embinmc.mod.strangeitems.event.ServerPlayerEvents;
 import embinmc.mod.strangeitems.event.TrackerEvents;
-import embinmc.mod.strangeitems.tracker.Trackers;
-import embinmc.mod.strangeitems.util.ElytraTrackerFix;
+import embinmc.mod.strangeitems.tracker.Trigger;
+import embinmc.mod.strangeitems.util.datafix.ElytraTrackerFix;
 import embinmc.mod.strangeitems.util.Id;
-import embinmc.mod.strangeitems.util.StrangeDataFixer;
+import embinmc.mod.strangeitems.util.datafix.StrangeDataFixer;
+import embinmc.mod.strangeitems.util.StrangeUtil;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Comparator;
 import java.util.List;
 
 public final class SIRegisteredEvents {
@@ -22,11 +24,12 @@ public final class SIRegisteredEvents {
     public static final Identifier ENTITY_ATTACKED = Id.of("mobs_hit_tracker");
     public static final Identifier PLAYER_DROP_ITEM = Id.of("player_drop_item");
     public static final Identifier PLAYER_TICK = Id.of("player_tick");
+    public static final Identifier PLAYER_JUMP = Id.of("player_jump");
 
     public static void registerEvents() {
         PlayerBlockBreakEvents.AFTER.register(BLOCK_MINED, (level, player, blockPos, blockState, blockEntity) -> {
             Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
-            Trackers.BLOCKS_MINED.appendTracker(player.getActiveItem(), blockId.toString());
+            Trigger.BLOCK_MINED.appendWithData(player.registryAccess(), player.getActiveItem(), 1, blockId);
         });
 
         ServerPlayerEvents.ON_TICK.register(PLAYER_TICK, player -> {
@@ -34,31 +37,23 @@ public final class SIRegisteredEvents {
                 ItemStack headStack = player.getItemBySlot(EquipmentSlot.HEAD);
                 ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
                 ItemStack legsStack = player.getItemBySlot(EquipmentSlot.LEGS);
+                ItemStack footStack = player.getItemBySlot(EquipmentSlot.FEET);
 
-                if (!headStack.isEmpty()) {
-                    if (player.isEyeInFluid(FluidTags.WATER)) {
-                        Trackers.TIME_UNDERWATER.appendTracker(headStack);
-                    }
-                }
-                if (!chestStack.isEmpty()) {
-                    if (player.isInLava()) {
-                        Trackers.TIME_IN_LAVA.appendTracker(chestStack);
-                    }
-                }
-                if (!legsStack.isEmpty()) {
-                    String dimension = player.level().dimensionTypeRegistration().getRegisteredName();
-                    Trackers.TIME_IN_DIMENSIONS.appendTracker(legsStack, dimension);
-                    if (player.isDiscrete()) {
-                        Trackers.TIME_SNEAKING.appendTracker(legsStack);
-                    }
-                }
+                Trigger.TICK_WEAR_ARMOR.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isEyeInFluid(FluidTags.WATER))
+                    Trigger.TICK_UNDERWATER.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isInLava())
+                    Trigger.TICK_IN_LAVA.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+                if (player.isDiscrete())
+                    Trigger.TICK_SNEAK.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+
                 if (player.isFallFlying()) {
                     List<EquipmentSlot> slotsWithGlider = EquipmentSlot.VALUES.stream()
                             .filter(slot -> LivingEntity.canGlideUsing(player.getItemBySlot(slot), slot))
                             .toList();
                     for (EquipmentSlot equipmentSlot : slotsWithGlider) {
                         ItemStack gliderItem = player.getItemBySlot(equipmentSlot);
-                        Trackers.TIME_FLOWN_WITH_ELYTRA.appendTracker(gliderItem);
+                        Trigger.TICK_GLIDING.appendWithDimension(player, gliderItem);
                     }
                 }
             }
@@ -66,14 +61,36 @@ public final class SIRegisteredEvents {
         });
 
         ServerPlayerEvents.ON_DROP_ITEM.register(PLAYER_DROP_ITEM, (player, itemStack) -> {
-            Trackers.TIMES_DROPPED.appendTracker(itemStack);
+            Trigger.ITEM_DROPPED.appendWithDimension(player, itemStack);
+            return InteractionResult.PASS;
+        });
+
+        ServerPlayerEvents.ON_JUMP.register(PLAYER_JUMP, player -> {
+            if (!player.isSpectator() || !player.touchingUnloadedChunk()) {
+                ItemStack headStack = player.getItemBySlot(EquipmentSlot.HEAD);
+                ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
+                ItemStack legsStack = player.getItemBySlot(EquipmentSlot.LEGS);
+                ItemStack footStack = player.getItemBySlot(EquipmentSlot.FEET);
+
+                Trigger.JUMP.appendWithDimension(player, headStack, chestStack, legsStack, footStack);
+            }
             return InteractionResult.PASS;
         });
 
         StrangeDataFixer.register(new ElytraTrackerFix());
 
-        TrackerEvents.ON_APPEND.register(Id.of("data_fix"), (tracker, itemStack, increaseAmount) -> {
-            StrangeDataFixer.apply(itemStack);
+        TrackerEvents.WRITE_NBT.register(Id.of("data_fix"), (registryAccess, tracker, itemStack, nbt) -> {
+            int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
+            if (dataVersion >= StrangeItems.DATA_VERSION)
+                return true;
+            StrangeDataFixer.FIXERS.stream()
+                    .sorted(Comparator.comparingInt(StrangeDataFixer::targetDataVersion))
+                    .forEach(dataFixer -> {
+                        if (dataVersion > dataFixer.targetDataVersion())
+                            return;
+                        dataFixer.fix(dataVersion, nbt);
+                    });
+            nbt.putInt(StrangeUtil.DATA_VERSION_TAG, StrangeItems.DATA_VERSION);
             return true;
         });
     }

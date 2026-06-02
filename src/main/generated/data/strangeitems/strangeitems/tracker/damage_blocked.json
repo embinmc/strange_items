@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "translate": "tracker.strangeitems.damage_blocked"
+  },
+  "items_to_track": "#strangeitems:trackers/shield",
+  "map_save_id": "strangeitems:damage_blocked_map",
+  "save_id": "strangeitems:damage_blocked",
+  "trigger": "strangeitems:damage_blocked_by_shield",
+  "value_formatter": "strangeitems:divide_by_ten"
+}

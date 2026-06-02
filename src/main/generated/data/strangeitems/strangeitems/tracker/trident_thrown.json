@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.trident_thrown"
+  },
+  "items_to_track": "minecraft:trident",
+  "save_id": "strangeitems:trident_thrown",
+  "trigger": "strangeitems:throw_trident"
+}

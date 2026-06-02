@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.time_flown_with_elytra"
+  },
+  "items_to_track": "#strangeitems:trackers/glider",
+  "save_id": "strangeitems:time_flown_with_elytra",
+  "trigger": "strangeitems:tick/gliding",
+  "value_formatter": "minecraft:time"
+}

@@ -7,8 +7,10 @@
     "ArmadilloMixin",
     "AxeMixin",
     "BowMixin",
+    "BrushableBlockEntityMixin",
     "BrushMixin",
     "CrossbowItemMixin",
+    "DataFixersMixin",
     "EquippableComponentMixin",
     "FishingBobberMixin",
     "FishingRodMixin",
@@ -16,7 +18,10 @@
     "HoeMixin",
     "ItemEnchantmentsMixin",
     "ItemMixin",
+    "LivingEntityMixin",
+    "PlayerEnderChestContainerMixin",
     "PlayerMixin",
+    "PumpkinBlockMixin",
     "ServerPlayerMixin",
     "ShearsMixin",
     "SheepMixin",
@@ -27,8 +32,8 @@
     "defaultRequire": 1
   },
   "client": [
+    "CollectorsMixin",
     "KeyBindAccessor",
-    "SmithingScreenMixin",
-    "CollectorsMixin"
+    "SmithingScreenMixin"
   ]
 }

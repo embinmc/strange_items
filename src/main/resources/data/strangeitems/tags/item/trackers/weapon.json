@@ -1,0 +1,10 @@
+{
+  "values":[
+    "#minecraft:swords",
+    "minecraft:mace",
+    "minecraft:trident",
+    "#minecraft:axes",
+    "#minecraft:spears",
+    "#strangeitems:trackers/bow"
+  ]
+}

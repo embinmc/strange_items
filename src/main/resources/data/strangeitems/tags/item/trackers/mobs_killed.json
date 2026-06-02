@@ -1,14 +1,8 @@
 {
   "values":[
-    "#minecraft:swords",
-    "minecraft:mace",
-    "minecraft:trident",
-    "minecraft:bow",
-    "#minecraft:axes",
-    "minecraft:crossbow",
+    "#strangeitems:trackers/weapon",
     "#minecraft:pickaxes",
-    "#minecraft:shovels",
-    "#minecraft:hoes",
-    "#minecraft:spears"
+    "#strangeitems:trackers/shovel",
+    "#strangeitems:trackers/hoe"
   ]
 }

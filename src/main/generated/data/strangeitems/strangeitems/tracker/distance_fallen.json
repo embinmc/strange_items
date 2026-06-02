@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.distance_fallen"
+  },
+  "items_to_track": "#strangeitems:trackers/distance_fallen",
+  "save_id": "strangeitems:distance_fallen",
+  "trigger": "strangeitems:fall",
+  "value_formatter": "minecraft:distance"
+}

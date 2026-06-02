@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "translate": "tracker.strangeitems.damage_taken"
+  },
+  "items_to_track": "#strangeitems:trackers/armor",
+  "map_save_id": "strangeitems:damage_taken_map",
+  "save_id": "strangeitems:damage_taken",
+  "trigger": "strangeitems:take_damage",
+  "value_formatter": "strangeitems:divide_by_ten"
+}

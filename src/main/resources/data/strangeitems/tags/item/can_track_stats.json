@@ -1,23 +1,6 @@
 {
   "values":[
-    "#minecraft:swords",
-    "#minecraft:pickaxes",
-    "#minecraft:axes",
-    "#minecraft:shovels",
-    "#minecraft:hoes",
-    "#minecraft:spears",
-    "minecraft:mace",
-    "minecraft:bow",
-    "minecraft:flint_and_steel",
-    "minecraft:shears",
-    "minecraft:elytra",
-    "minecraft:trident",
-    "minecraft:brush",
-    "minecraft:fishing_rod",
-    "#minecraft:head_armor",
-    "#minecraft:chest_armor",
-    "#minecraft:leg_armor",
-    "#minecraft:foot_armor",
-    "minecraft:crossbow"
+    "#strangeitems:trackers/blocks_mined",
+    "#strangeitems:trackers/weapon"
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.paths_created"
+  },
+  "items_to_track": "#strangeitems:trackers/shovel",
+  "save_id": "strangeitems:paths_created",
+  "trigger": "strangeitems:create_path_block"
+}

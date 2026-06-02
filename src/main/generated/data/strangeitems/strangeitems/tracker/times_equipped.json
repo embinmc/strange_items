@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.times_equipped"
+  },
+  "items_to_track": "#strangeitems:trackers/equippable",
+  "save_id": "strangeitems:times_equipped",
+  "trigger": "strangeitems:equip_item"
+}

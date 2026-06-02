@@ -1,6 +1,7 @@
 {
   "values": [
     "strangeitems:time_flown_with_elytra",
+    "strangeitems:damage_blocked",
     "strangeitems:shots_fired",
     "strangeitems:shots_hit",
     "strangeitems:fires_lit",
@@ -10,6 +11,7 @@
     "strangeitems:times_fishing_rod_caught_something",
     "strangeitems:times_fishing_rod_cast",
     "strangeitems:times_fishing_rod_reeled_in",
+    "strangeitems:items_recovered_with_brush",
     "strangeitems:blocks_brushed",
     "strangeitems:armadillos_brushed",
     "strangeitems:damage_taken",
@@ -28,6 +30,7 @@
     "strangeitems:logs_stripped",
     "strangeitems:paths_created",
     "strangeitems:campfires_put_out",
+    "strangeitems:pumpkins_carved",
     "strangeitems:plants_trimmed",
     "strangeitems:times_dropped"
   ]

@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.damage_dealt"
+  },
+  "items_to_track": "#strangeitems:trackers/weapon",
+  "save_id": "strangeitems:damage_dealt",
+  "trigger": "strangeitems:deal_damage",
+  "value_formatter": "strangeitems:divide_by_ten"
+}

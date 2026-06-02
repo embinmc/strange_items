@@ -1,6 +1,6 @@
 package embinmc.mod.strangeitems.mixin;
 
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Trigger;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class FishingRodMixin {
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
     public void reelInRodMixin(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        Trackers.TIMES_FISHING_ROD_REELED_IN.appendTracker(user.getItemInHand(hand));
+        Trigger.REEL_IN_FISHING_ROD.appendWithDimension(user, user.getItemInHand(hand));
     }
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"))
     public void castRodMixin(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        Trackers.TIMES_FISHING_ROD_CAST.appendTracker(user.getItemInHand(hand));
+        Trigger.CAST_FISHING_ROD.appendWithDimension(user, user.getItemInHand(hand));
     }
 }

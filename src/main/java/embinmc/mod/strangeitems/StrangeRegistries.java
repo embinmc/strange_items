@@ -1,22 +1,33 @@
 package embinmc.mod.strangeitems;
 
-import embinmc.mod.strangeitems.tracker.Tracker;
-import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.*;
+import embinmc.mod.strangeitems.util.StatFormatters;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.Registry;
+import net.minecraft.stats.StatFormatter;
 
 public class StrangeRegistries {
+    public static final Registry<TrackerType<?>> TRACKER_TYPE = FabricRegistryBuilder.create(
+            StrangeRegistryKeys.TRACKER_TYPE
+    ).attribute(RegistryAttribute.OPTIONAL).buildAndRegister();
 
-    /**
-     * Registry containing all registered trackers.
-     * @see Trackers
-     */
-    public static final Registry<Tracker> TRACKER = FabricRegistryBuilder.create(
-            StrangeRegistryKeys.TRACKER
+    public static final Registry<Trigger> TRIGGER = FabricRegistryBuilder.create(
+            StrangeRegistryKeys.TRIGGER
+    ).attribute(RegistryAttribute.OPTIONAL).buildAndRegister();
+
+    public static final Registry<StatFormatter> STAT_FORMATTER = FabricRegistryBuilder.create(
+            StrangeRegistryKeys.STAT_FORMATTER
     ).attribute(RegistryAttribute.OPTIONAL).buildAndRegister();
 
     public static void acknowledgeRegistries() {
-        StrangeItems.LOGGER.info("Creating registry \"strangeitems:tracker\"");
+        StrangeItems.LOGGER.info("Creating registries...");
+
+        StatFormatters.NONE.format(0);
+        TrackerType.BASIC.codec();
+        var _ = Trigger.NEVER.getClass();
+
+        DynamicRegistries.registerSynced(StrangeRegistryKeys.TRACKER_NEW, Tracker.DIRECT_CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
     }
 }

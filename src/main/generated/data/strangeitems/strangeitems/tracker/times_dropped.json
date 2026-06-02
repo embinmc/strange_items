@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:timestamp",
+  "description": {
+    "translate": "tracker.strangeitems.times_dropped"
+  },
+  "items_to_track": "#strangeitems:can_track_stats",
+  "map_save_id": "strangeitems:times_dropped_map",
+  "save_id": "strangeitems:times_dropped",
+  "trigger": "strangeitems:item_dropped"
+}

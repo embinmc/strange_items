@@ -1,0 +1,10 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.time_sneaking"
+  },
+  "items_to_track": "#strangeitems:trackers/time_sneaking",
+  "save_id": "strangeitems:time_sneaking",
+  "trigger": "strangeitems:tick/sneak",
+  "value_formatter": "minecraft:time"
+}

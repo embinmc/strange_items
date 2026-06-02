@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.dirt_tilled"
+  },
+  "items_to_track": "#strangeitems:trackers/hoe",
+  "save_id": "strangeitems:dirt_tilled",
+  "trigger": "strangeitems:till_dirt"
+}

@@ -1,0 +1,9 @@
+{
+  "type": "strangeitems:basic",
+  "description": {
+    "translate": "tracker.strangeitems.sheep_sheared"
+  },
+  "items_to_track": "#strangeitems:trackers/shears",
+  "save_id": "strangeitems:sheep_sheared",
+  "trigger": "strangeitems:shear_sheep"
+}

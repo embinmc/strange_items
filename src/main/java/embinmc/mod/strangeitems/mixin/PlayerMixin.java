@@ -2,8 +2,11 @@ package embinmc.mod.strangeitems.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import embinmc.mod.strangeitems.tracker.Trackers;
+import embinmc.mod.strangeitems.tracker.Trigger;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,17 +26,20 @@ import net.minecraft.world.item.ItemStack;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin {
-    @Shadow @NotNull public abstract ItemStack getWeaponItem();
+    @Shadow @NonNull public abstract ItemStack getWeaponItem();
 
     @Inject(method = "damageStatsAndHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/resources/Identifier;I)V"))
     public void hitMobMixin(Entity target, float oldLivingEntityHealth, CallbackInfo ci, @Local(ordinal = 1) float actualDamage) {
-        Trackers.MOBS_HIT.appendTracker(this.getWeaponItem());
-        Trackers.DAMAGE_DEALT.appendTracker(this.getWeaponItem(), Math.round(actualDamage * 10.0F));
+        Identifier targetId = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
+        Trigger.HIT_MOB.appendWithData(target.registryAccess(), this.getWeaponItem(), 1, targetId);
+        Trigger.DEAL_DAMAGE.appendWithData(target.registryAccess(), this.getWeaponItem(), Math.round(actualDamage * 10.0F), targetId);
+        // Trackers.MOBS_HIT.appendTracker(this.getWeaponItem());
+        // Trackers.DAMAGE_DEALT.appendTracker(this.getWeaponItem(), Math.round(actualDamage * 10.0F));
     }
 
     @Inject(method = "killedEntity", at = @At(value = "HEAD"))
     public void killOtherMobMixin(ServerLevel world, LivingEntity other, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        Trackers.MOBS_KILLED.appendTracker(this.getWeaponItem(), BuiltInRegistries.ENTITY_TYPE.getKey(other.getType()).toString());
+        Trigger.KILL_MOB.appendWithData(world.registryAccess(), this.getWeaponItem(), 1, BuiltInRegistries.ENTITY_TYPE.getKey(other.getType()));
     }
 
     @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/resources/Identifier;I)V", ordinal = 1))
@@ -45,9 +51,10 @@ public abstract class PlayerMixin {
                 player.getItemBySlot(EquipmentSlot.LEGS),
                 player.getItemBySlot(EquipmentSlot.FEET)
         );
+        Identifier damageSourceId = source.typeHolder().unwrapKey().map(ResourceKey::identifier).orElse(null);
         for (ItemStack stack : armorItems) {
             if (!stack.isEmpty()) {
-                Trackers.DAMAGE_TAKEN.appendTracker(stack, Math.round(amount * 10.0F));
+                Trigger.TAKE_DAMAGE.appendWithData(world.registryAccess(), stack, Math.round(amount * 10.0F), damageSourceId);
             }
         }
     }
@@ -57,7 +64,7 @@ public abstract class PlayerMixin {
         Player player = (Player)(Object) this;
         ItemStack feet_stack = player.getItemBySlot(EquipmentSlot.FEET);
         if (!feet_stack.isEmpty()) {
-            Trackers.DISTANCE_FALLEN.appendTracker(feet_stack, Mth.floor(fallDistance * 100.0));
+            Trigger.FALL.appendWithData(player.registryAccess(), feet_stack, Mth.floor(fallDistance * 100.0), player.level().dimension().identifier());
         }
     }
 }

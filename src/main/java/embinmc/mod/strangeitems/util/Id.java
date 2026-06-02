@@ -4,7 +4,7 @@ import embinmc.mod.strangeitems.StrangeItems;
 import net.minecraft.resources.Identifier;
 
 public class Id {
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public Identifier convertNamespace(String namespace) {
         String[] splitted = namespace.split(":");
         if (splitted.length == 1) {

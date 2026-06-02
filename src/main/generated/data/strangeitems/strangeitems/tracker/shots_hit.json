@@ -1,0 +1,11 @@
+{
+  "type": "strangeitems:id_map",
+  "description": {
+    "translate": "tracker.strangeitems.shots_hit"
+  },
+  "items_to_track": "#strangeitems:trackers/bow",
+  "map_save_id": "strangeitems:shots_hit_map",
+  "save_id": "strangeitems:shots_hit",
+  "translation_prefix": "entity",
+  "trigger": "strangeitems:arrow_hit_mob"
+}
