@@ -2,6 +2,7 @@ package embinmc.mod.strangeitems.client;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -29,6 +30,8 @@ public class ItemStackButton extends Button {
         if (this.itemStack.isEmpty())
             this.active = false;
         this.slot = slot;
+        if (!this.itemStack.isEmpty())
+            this.setTooltip(Tooltip.create(this.itemStack.getStyledHoverName()));
     }
 
     protected ItemStackButton(int x, int y, ItemStack itemStack, OnPressStack onPress, StatShowcaseScreen showcaseScreen) {

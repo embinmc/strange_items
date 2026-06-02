@@ -7,8 +7,6 @@ import embinmc.mod.strangeitems.tracker.TrackerTags;
 import embinmc.mod.strangeitems.util.StrangeUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMaps;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -40,7 +38,7 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
     public String currentSearchTerm = "";
 
     public TrackerListWidget(StatShowcaseScreen showcaseScreen, ItemStack itemStack, int width, int y, int itemHeight) {
-        super(Minecraft.getInstance(), width - WIDTH, showcaseScreen.height - 40, y, itemHeight);
+        super(Minecraft.getInstance(), width - WIDTH, showcaseScreen.height - 60, y, itemHeight);
         this.checkingStack = itemStack;
         this.player = showcaseScreen.player;
         this.trackerRegistry = this.player.registryAccess().lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
@@ -95,6 +93,14 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
             return;
         }
         super.extractListItems(graphics, mouseX, mouseY, a);
+    }
+
+    @Override
+    public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
+        if (!this.checkingStack.isEmpty()) {
+            graphics.textRenderer().accept(TextAlignment.LEFT, this.getX(), this.getY() - 12, this.checkingStack.getStyledHoverName());
+        }
     }
 
     public class TrackerEntry extends ObjectSelectionList.Entry<TrackerEntry> {

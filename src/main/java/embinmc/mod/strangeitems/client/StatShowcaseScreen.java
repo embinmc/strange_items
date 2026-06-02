@@ -45,7 +45,7 @@ public class StatShowcaseScreen extends Screen {
         this.searchBar.setWidth(this.width - TrackerListWidget.WIDTH);
         this.addRenderableWidget(this.searchBar);
         ItemStack itemStack2 = this.initialStack == null ? this.player.getActiveItem() : this.initialStack;
-        this.trackerListWidget = new TrackerListWidget(this, itemStack2, this.width, 36, 16);
+        this.trackerListWidget = new TrackerListWidget(this, itemStack2, this.width, 44, 16);
         this.addRenderableWidget(this.trackerListWidget);
         this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
 
@@ -57,7 +57,7 @@ public class StatShowcaseScreen extends Screen {
         boolean onHotbar = true;
         ItemStackButton.OnPressStack onPress = button -> {
             this.removeWidget(this.trackerListWidget);
-            this.trackerListWidget = new TrackerListWidget(this, button.getItemStack(), this.width, 40, 16);
+            this.trackerListWidget = new TrackerListWidget(this, button.getItemStack(), this.width, 44, 16);
             this.addRenderableWidget(this.trackerListWidget);
             this.searchBar.setResponder(this.trackerListWidget::reupdateWithSearch);
             this.trackerListWidget.reupdateWithSearch(this.searchBar.getValue());

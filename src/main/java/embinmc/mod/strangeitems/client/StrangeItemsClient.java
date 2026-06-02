@@ -46,8 +46,8 @@ public class StrangeItemsClient implements ClientModInitializer {
         ));
     }
 
-    public static KeyMapping show_tracker_ids = vanillaKeybind("show_tracker_ids", InputConstants.KEY_APOSTROPHE);
-    public static KeyMapping SHOW_TRACKER_SCREEN = vanillaKeybind("show_tracker_screen", InputConstants.KEY_SEMICOLON);
+    public static KeyMapping show_tracker_ids = vanillaKeybind("show_tracker_ids", InputConstants.KEY_COMMA);
+    public static KeyMapping SHOW_TRACKER_SCREEN = vanillaKeybind("show_tracker_screen", InputConstants.KEY_Z);
 
     @Override
     public void onInitializeClient() {
