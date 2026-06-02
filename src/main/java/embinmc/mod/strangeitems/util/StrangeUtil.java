@@ -112,15 +112,9 @@ public class StrangeUtil {
     /**
      * A method to check if Tooltip Scroll is installed, respecting the users settings on how it should handle this check.
      */
+    @Deprecated
     public static boolean isTooltipScrollInstalled() {
-        boolean result = false;
-        if (StrangeConfig.check_for_tooltipscroll) {
-            result = StrangeItems.tooltipscroll_installed;
-        }
-        if (StrangeConfig.invert_tooltipscroll_check_value) {
-            return !result;
-        }
-        return result;
+        return false;
     }
 
     public static HolderSet<Tracker> getTooltipOrder(HolderLookup.@Nullable Provider registries, TagKey<Tracker> tag) {

@@ -28,15 +28,6 @@ public class StrangeItemsClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("strangeitems/client");
     public static final KeyMapping.Category STRANGEKEYS = KeyMapping.Category.register(Id.of("keys"));
 
-    private static KeyMapping keybind(String translation, int key) {
-        return new KeyMapping(
-            "key.strangeitems." + translation,
-            InputConstants.Type.KEYSYM,
-            key,
-            STRANGEKEYS
-        );
-    }
-
     private static KeyMapping vanillaKeybind(String translation, int key) {
         return KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.strangeitems." + translation,
@@ -57,6 +48,8 @@ public class StrangeItemsClient implements ClientModInitializer {
         StrangeConfig.readConfig();
 
         ClientTickEvents.END_CLIENT_TICK.register(Id.of("open_menu_ingame"), minecraft -> {
+            if (minecraft.level == null)
+                return;
             if (SHOW_TRACKER_SCREEN.consumeClick())
                 minecraft.setScreenAndShow(new StatShowcaseScreen(null));
         });
