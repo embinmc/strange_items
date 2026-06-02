@@ -8,7 +8,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
-import embinmc.mod.strangeitems.client.StatShowcaseScreen;
 import embinmc.mod.strangeitems.client.StrangeItemsClient;
 import embinmc.mod.strangeitems.client.StrangeOptions;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
@@ -46,7 +45,7 @@ public abstract class Tracker {
     protected final Trigger trigger;
     protected final HolderSet<Item> itemsToTrack;
 
-    public static final Codec<Tracker> CODEC = StrangeRegistries.TRACKER_TYPE.byNameCodec().dispatch(Tracker::getType, TrackerType::codec);
+    public static final Codec<Tracker> DIRECT_CODEC = StrangeRegistries.TRACKER_TYPE.byNameCodec().dispatch(Tracker::getType, TrackerType::codec);
     protected static final Component NO_REGISTRIES = Component.translatable("tooltip.strangeitems.no_registries").withStyle(ChatFormatting.RED);
 
     protected Tracker(Trigger trigger, Component description, Optional<Component> altDescription, StatFormatter statFormatter, Identifier saveId, HolderSet<Item> itemsToTrack) {
@@ -217,14 +216,15 @@ public abstract class Tracker {
                 trackerAddIndex[0] += 1;
             }
         }
-        if (!itemStack.has(DataComponents.CUSTOM_DATA))
+        boolean hasCustomData = itemStack.has(DataComponents.CUSTOM_DATA);
+        if (!hasCustomData && !StrangeOptions.showTrackerIfZero())
             return;
-        if (StrangeUtil.isKeyDown(StrangeItemsClient.SHOW_TRACKER_SCREEN))
-            Minecraft.getInstance().setScreenAndShow(new StatShowcaseScreen(itemStack));
+        List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
+        if (hasCustomData && StrangeUtil.isKeyDown(StrangeItemsClient.SHOW_TRACKER_SCREEN) && !trackersToShow.isEmpty())
+            StrangeUtil.setShowcaseScreen(itemStack);
         if (!StrangeOptions.showTrackersInTooltip())
             return;
 
-        List<Holder<Tracker>> trackersToShow = StrangeUtil.getTrackersForItem(tooltipContext.registries(), itemStack, StrangeOptions.showTrackerIfZero());
         trackersToShow = trackersToShow.stream()
                 .filter(trackerHolder -> StrangeConfig.HIDDEN_TRACKERS.shouldShowForItem(itemStack.typeHolder(), trackerHolder))
                 .toList();
@@ -235,7 +235,7 @@ public abstract class Tracker {
         int dataVersion = nbt.getIntOr(StrangeUtil.DATA_VERSION_TAG, 0);
         list.add(trackerAddIndex[0], Component.translatable("tooltip.strangeitems.strange_trackers").append(":").withStyle(ChatFormatting.GRAY)); // header
         trackerAddIndex[0] += 1;
-        if (dataVersion < StrangeItems.DATA_VERSION) { // old data version warning
+        if (dataVersion < StrangeItems.DATA_VERSION && hasCustomData) { // old data version warning
             List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 140, Style.EMPTY);
             lines.forEach(line -> {
                 list.add(trackerAddIndex[0], Component.literal(line.getString()).withStyle(ChatFormatting.RED));
@@ -256,6 +256,8 @@ public abstract class Tracker {
             if (!tooltipOrder.contains(trackerHolder))
                 addToTooltip.accept(trackerHolder);
         }
+        if (!hasCustomData)
+            return;
         MutableComponent keyText = StrangeItemsClient.SHOW_TRACKER_SCREEN.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY);
         MutableComponent showMoreText = Component.empty().append(" ").append(Component.translatable("tooltip.strangeitems.show_more", keyText));
         list.add(trackerAddIndex[0], showMoreText.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)); // show more

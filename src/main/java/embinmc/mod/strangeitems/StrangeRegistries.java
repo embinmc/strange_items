@@ -28,6 +28,6 @@ public class StrangeRegistries {
         TrackerType.BASIC.codec();
         var _ = Trigger.NEVER.getClass();
 
-        DynamicRegistries.registerSynced(StrangeRegistryKeys.TRACKER_NEW, Tracker.CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
+        DynamicRegistries.registerSynced(StrangeRegistryKeys.TRACKER_NEW, Tracker.DIRECT_CODEC, DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY);
     }
 }

@@ -4,9 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
+import embinmc.mod.strangeitems.client.StatShowcaseScreen;
 import embinmc.mod.strangeitems.client.config.StrangeConfig;
 import embinmc.mod.strangeitems.mixin.KeyBindAccessor;
 import embinmc.mod.strangeitems.tracker.Tracker;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 import org.jspecify.annotations.Nullable;
@@ -171,5 +174,13 @@ public class StrangeUtil {
                 newOrdered.add(trackerHolder);
         }
         return newOrdered;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void setShowcaseScreen(@Nullable ItemStack itemStack) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.gui.screen() != null)
+            minecraft.gui.screen().onClose();
+        minecraft.setScreenAndShow(new StatShowcaseScreen(itemStack));
     }
 }
