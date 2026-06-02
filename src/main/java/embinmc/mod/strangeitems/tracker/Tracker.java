@@ -82,6 +82,7 @@ public abstract class Tracker {
         return List.of(Component.literal(" ").append(line));
     }
 
+    @Environment(EnvType.CLIENT)
     public void addToShowcaseText(final Consumer<Component> consumer, final HolderLookup.Provider provider, final ItemStack itemStack) {
         this.getTooltip(provider, itemStack).forEach(consumer);
     }
@@ -101,6 +102,8 @@ public abstract class Tracker {
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int count, final @Nullable Identifier data) {
+        if (!this.itemsToTrack.contains(itemStack.typeHolder()))
+            return;
         itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
             if (TrackerEvents.ON_APPEND.invoker().onAppend(registryAccess, this, itemStack, count, data))
                 return customData.update(nbt -> {

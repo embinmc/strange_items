@@ -68,6 +68,7 @@
   "key.strangeitems.show_shots_hit": "Show Shots Hit (If Available)",
   "key.strangeitems.show_tracker_ids": "Show Tracker IDs",
   "key.strangeitems.debug_list_trackers": "[DEBUG] List registered trackers",
+  "key.strangeitems.show_tracker_screen": "Open Tracker Screen",
   "key.category.strangeitems.keys": "Strange Items",
   "key.category.strangeitems.debug": "Strange Items: Debug Controls",
 

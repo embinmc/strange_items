@@ -21,7 +21,6 @@
     "strangeitems:times_fishing_rod_reeled_in",
     "strangeitems:times_fishing_rod_caught_something",
     "strangeitems:items_recovered_with_brush",
-    "strangeitems:logs_stripped",
     "strangeitems:damage_dealt",
     "strangeitems:damage_taken",
     "strangeitems:damage_blocked",
@@ -32,6 +31,7 @@
     "strangeitems:mobs_hit",
     "strangeitems:mobs_killed",
     "strangeitems:times_dropped",
+    "strangeitems:logs_stripped",
     "strangeitems:blocks_mined"
   ]
 }
