@@ -1,5 +1,6 @@
 package embinmc.mod.strangeitems.tracker;
 
+import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.util.Id;
@@ -48,11 +49,22 @@ public class Trigger {
     public static final Trigger DEAL_DAMAGE = register("deal_damage");
     public static final Trigger FALL = register("fall");
 
+    private final Identifier id;
+
+    public Trigger(Identifier id) {
+        this.id = id;
+    }
+
     private static Trigger register(final String id) {
-        return Registry.register(StrangeRegistries.TRIGGER, Id.of(id), new Trigger());
+        Identifier identifier = Id.of(id);
+        return Registry.register(StrangeRegistries.TRIGGER, identifier, new Trigger(identifier));
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int amount, final @Nullable Identifier data) {
+        if (itemStack == null) {
+            StrangeItems.LOGGER.warn("Trigger {} attempted to append trackers to null item stack", this.id);
+            return;
+        }
         if (itemStack.isEmpty())
             return;
         Registry<Tracker> registry = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);

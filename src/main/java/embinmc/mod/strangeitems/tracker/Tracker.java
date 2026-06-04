@@ -102,6 +102,8 @@ public abstract class Tracker {
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int count, final @Nullable Identifier data) {
+        if (itemStack == null)
+            return;
         if (!this.itemsToTrack.contains(itemStack.typeHolder()))
             return;
         itemStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
@@ -261,7 +263,7 @@ public abstract class Tracker {
         }
         if (!hasCustomData)
             return;
-        MutableComponent keyText = StrangeItemsClient.SHOW_TRACKER_SCREEN.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY);
+        MutableComponent keyText = StrangeItemsClient.SHOW_TRACKER_SCREEN.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.YELLOW);
         MutableComponent showMoreText = Component.empty().append(" ").append(Component.translatable("tooltip.strangeitems.show_more", keyText));
         list.add(trackerAddIndex[0], showMoreText.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)); // show more
         trackerAddIndex[0] += 1;
