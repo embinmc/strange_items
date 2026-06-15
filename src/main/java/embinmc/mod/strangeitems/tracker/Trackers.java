@@ -5,7 +5,7 @@ import embinmc.mod.strangeitems.util.Id;
 import net.minecraft.resources.ResourceKey;
 
 /**
- * Class containing all default registered trackers.
+ * Class containing all default trackers.
  */
 public class Trackers {
     // pre 2.0

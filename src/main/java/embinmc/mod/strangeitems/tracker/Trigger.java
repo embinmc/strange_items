@@ -1,6 +1,5 @@
 package embinmc.mod.strangeitems.tracker;
 
-import embinmc.mod.strangeitems.StrangeItems;
 import embinmc.mod.strangeitems.StrangeRegistries;
 import embinmc.mod.strangeitems.StrangeRegistryKeys;
 import embinmc.mod.strangeitems.util.Id;
@@ -61,11 +60,7 @@ public class Trigger {
     }
 
     public void appendWithData(final RegistryAccess registryAccess, final ItemStack itemStack, final int amount, final @Nullable Identifier data) {
-        if (itemStack == null) {
-            StrangeItems.LOGGER.warn("Trigger {} attempted to append trackers to null item stack", this.id);
-            return;
-        }
-        if (itemStack.isEmpty())
+        if (itemStack == null || itemStack.isEmpty())
             return;
         Registry<Tracker> registry = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
         registry.stream().filter(tracker -> tracker.getTrigger() == this).forEach(tracker -> {
@@ -89,7 +84,7 @@ public class Trigger {
         Registry<Tracker> registry = registryAccess.lookupOrThrow(StrangeRegistryKeys.TRACKER_NEW);
         registry.stream().filter(tracker -> tracker.getTrigger() == this).forEach(tracker -> {
             for (ItemStack itemStack : itemStacks) {
-                if (itemStack.isEmpty())
+                if (itemStack == null || itemStack.isEmpty())
                     continue;
                 tracker.appendWithData(registryAccess, itemStack, 1, entity.level().dimension().identifier());
             }
