@@ -88,10 +88,9 @@ public class StrangeUtil {
      * <code>false</code> if it isn't.
      */
     public static boolean isKeyDown(KeyMapping key) {
-        Window handle = Minecraft.getInstance().getWindow();
         int key_code = ((KeyBindAccessor)key).getKey().getValue();
         // don't check if the key code is less than 0, it'll be invalid and spam the logs
-        return key_code >= 0 && InputConstants.isKeyDown(handle, key_code);
+        return key_code >= 0 && InputConstants.isKeyDown(key_code);
     }
 
     public static void addItemIdToTooltip(ItemStack stack, Consumer<Component> tooltip, TooltipFlag type) {

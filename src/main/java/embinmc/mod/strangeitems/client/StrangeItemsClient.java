@@ -31,7 +31,7 @@ public class StrangeItemsClient implements ClientModInitializer {
     private static KeyMapping vanillaKeybind(String translation, int key) {
         return KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.strangeitems." + translation,
-                InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 key,
                 STRANGEKEYS
         ));

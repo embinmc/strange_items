@@ -1,9 +1,11 @@
 {
-  "type": "strangeitems:basic",
+  "type": "strangeitems:id_map",
   "description": {
     "translate": "tracker.strangeitems.campfires_put_out"
   },
   "items_to_track": "#strangeitems:trackers/shovel",
+  "map_save_id": "strangeitems:campfires_put_out_map",
   "save_id": "strangeitems:campfires_put_out",
+  "translation_prefix": "block",
   "trigger": "strangeitems:put_out_campfire"
 }

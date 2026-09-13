@@ -5,17 +5,17 @@
   "mixins": [
     "AbstractArrowMixin",
     "ArmadilloMixin",
-    "AxeMixin",
+    "BlockTransformerMixin",
     "BowMixin",
     "BrushableBlockEntityMixin",
     "BrushMixin",
+    "CampfireMixin",
     "CrossbowItemMixin",
     "DataFixersMixin",
     "EquippableComponentMixin",
     "FishingBobberMixin",
     "FishingRodMixin",
     "FlintAndSteelMixin",
-    "HoeMixin",
     "ItemEnchantmentsMixin",
     "ItemMixin",
     "LivingEntityMixin",
@@ -25,7 +25,6 @@
     "ServerPlayerMixin",
     "ShearsMixin",
     "SheepMixin",
-    "ShovelMixin",
     "TridentMixin"
   ],
   "injectors": {
