@@ -2,6 +2,7 @@ package embinmc.mod.strangeitems.mixin;
 
 import embinmc.mod.strangeitems.event.ServerPlayerEvents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -13,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
-    @Inject(method = "drop*", at = @At(value = "HEAD"), cancellable = true)
-    public void dropItemMixin(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
+    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZLnet/minecraft/util/Prediction;)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "HEAD"), cancellable = true)
+    public void dropItemMixin(ItemStack itemStack, boolean thrownFromHand, Prediction prediction, CallbackInfoReturnable<ItemEntity> cir) {
         ServerPlayer player = (ServerPlayer)(Object) this;
-        InteractionResult result = ServerPlayerEvents.ON_DROP_ITEM.invoker().onDrop(player, stack);
+        InteractionResult result = ServerPlayerEvents.ON_DROP_ITEM.invoker().onDrop(player, itemStack);
         if (result == InteractionResult.FAIL) {
             cir.cancel();
         }

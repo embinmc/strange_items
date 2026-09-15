@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.*;
@@ -167,7 +168,7 @@ public abstract class Tracker {
     }
 
     protected static <T extends Tracker> RecordCodecBuilder<T, HolderSet<Item>> itemsToTrackCodec() {
-        return RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items_to_track").forGetter(a -> a.itemsToTrack);
+        return RegistryCodecs.holderSet(Registries.ITEM).fieldOf("items_to_track").forGetter(a -> a.itemsToTrack);
     }
 
     protected static <T extends Tracker> MapCodec<T> noAdditionalArgsCodec(Function6<Trigger, Component, Optional<Component>, StatFormatter, Identifier, HolderSet<Item>, T> constructor) {

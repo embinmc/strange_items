@@ -114,7 +114,7 @@ public class TrackerDataProvider extends FabricDynamicRegistryProvider {
         idMap(c, Trackers.LOGS_STRIPPED, Trigger.STRIP_BLOCK_WITH_AXE, StatFormatters.DEFAULT, TrackerItemTags.TRACKER_LOGS_STRIPPED, "block");
         basic(c, Trackers.DIRT_TILLED, Trigger.TILL_DIRT, TrackerItemTags.TRACKER_HOE);
         basic(c, Trackers.PATHS_CREATED, Trigger.CREATE_PATH_BLOCK, TrackerItemTags.TRACKER_SHOVEL);
-        basic(c, Trackers.CAMPFIRES_PUT_OUT, Trigger.PUT_OUT_CAMPFIRE, TrackerItemTags.TRACKER_SHOVEL);
+        idMap(c, Trackers.CAMPFIRES_PUT_OUT, Trigger.PUT_OUT_CAMPFIRE, StatFormatters.DEFAULT, TrackerItemTags.TRACKER_SHOVEL, "block");
         basic(c, Trackers.CAMPFIRES_LIT, Trigger.RELIGHT_CAMPFIRE, TrackerItemTags.TRACKER_IGNITER);
         basic(c, Trackers.FIRES_LIT, Trigger.IGNITE_FIRE, TrackerItemTags.TRACKER_IGNITER);
         basic(c, Trackers.SHEEP_SHEARED, Trigger.SHEAR_SHEEP, TrackerItemTags.TRACKER_SHEARS);
