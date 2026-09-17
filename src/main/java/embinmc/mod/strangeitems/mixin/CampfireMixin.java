@@ -20,7 +20,7 @@ public abstract class CampfireMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/block/CampfireBlock;douse(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V"
     ))
-    private void doodoo(
+    private void strangeitems$doodoo(
             Entity source, LevelAccessor level, BlockPos pos, BlockState state, Operation<Void> original,
             @Local(argsOnly = true, name = "itemStack") ItemStack itemStack
     ) {

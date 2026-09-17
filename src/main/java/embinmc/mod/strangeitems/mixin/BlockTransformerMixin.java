@@ -26,7 +26,7 @@ public abstract class BlockTransformerMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/advancements/triggers/ItemUsedOnLocationTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemInstance;)V"
     ))
-    private void doodoo(
+    private void strangeitems$doodoo(
             ItemUsedOnLocationTrigger instance, ServerPlayer player,
             BlockPos pos, ItemInstance tool, Operation<Void> original,
             @Local(name = "updatedShape") BlockState updatedShape,

@@ -5,6 +5,6 @@
   },
   "items_to_track": "#strangeitems:trackers/time_in_lava",
   "save_id": "strangeitems:time_in_lava",
-  "trigger": "strangeitems:tick/sneak",
+  "trigger": "strangeitems:tick/in_lava",
   "value_formatter": "minecraft:time"
 }
