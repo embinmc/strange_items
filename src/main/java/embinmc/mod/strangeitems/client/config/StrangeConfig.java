@@ -47,7 +47,8 @@ public class StrangeConfig {
                 }
                 throw new JsonParseException("strange_items_hidden.json is not valid");
             } catch (Exception e) {
-                StrangeConfig.LOGGER.error("Failed to get config for hidden trackers!", e);
+                if (!(e instanceof FileNotFoundException))
+                    StrangeConfig.LOGGER.error("Failed to get config for hidden trackers!", e);
                 createAndWriteFile("config/strange_items_hidden.json", toFancyJsonString(HiddenTrackers.CODEC.encodeStart(JsonOps.INSTANCE, HIDDEN_TRACKERS).getOrThrow()));
             }
         } catch (Exception e) {
