@@ -65,8 +65,7 @@ public abstract class Tracker {
         nbt.putInt(this.saveId.toString(), prevVal + count);
     }
 
-    @Environment(EnvType.CLIENT)
-    public List<Component> getTooltip(final HolderLookup.@Nullable Provider provider, final ItemStack itemStack) {
+    public Component getGenericTooltip(final HolderLookup.@Nullable Provider provider, final ItemStack itemStack) {
         CustomData customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag nbt = customData.copyTag();
         //if (!nbt.contains(this.saveId.toString()))
@@ -79,14 +78,21 @@ public abstract class Tracker {
         } else {
             desc = ComponentUtils.mergeStyles(this.getRelevantDescription(), Style.EMPTY.withColor(ChatFormatting.GRAY));
         }
-        Component line = Component.translatable(this.trackerWithValueTranslationKey(), desc, formattedValue).withStyle(ChatFormatting.GRAY);
-        return List.of(Component.literal(" ").append(line));
+        return Component.translatable(this.trackerWithValueTranslationKey(), desc, formattedValue).withStyle(ChatFormatting.GRAY);
     }
 
     @Environment(EnvType.CLIENT)
-    public void addToShowcaseText(final Consumer<Component> consumer, final HolderLookup.Provider provider, final ItemStack itemStack) {
-        this.getTooltip(provider, itemStack).forEach(consumer);
+    public List<Component> getTooltip(final HolderLookup.@Nullable Provider provider, final ItemStack itemStack) {
+        return List.of(Component.literal(" ").append(this.getGenericTooltip(provider, itemStack)));
     }
+
+    @Environment(EnvType.CLIENT)
+    public Component getShowcaseHeader(final HolderLookup.Provider provider, final ItemStack itemStack) {
+        return this.getGenericTooltip(provider, itemStack);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void addShowcaseChildren(final Consumer<Component> consumer, final HolderLookup.Provider provider, final ItemStack itemStack) {}
 
     /// Even if the translation key `tooltip.strangeitems.tracker_with_value` is non-existent, it'll still format correctly.
     protected final String trackerWithValueTranslationKey() {

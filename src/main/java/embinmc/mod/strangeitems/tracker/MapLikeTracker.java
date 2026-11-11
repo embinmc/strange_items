@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class MapLikeTracker extends Tracker {
-    protected static final Component PREFIX = Component.literal("  > ").withStyle(ChatFormatting.GRAY);
+    protected static final Component PREFIX = Component.literal(" > ").withStyle(ChatFormatting.GRAY);
     protected static final Component SEP = Component.literal(": ").withStyle(ChatFormatting.GRAY);
     protected final Identifier mapSaveId;
 
@@ -42,8 +42,8 @@ public abstract class MapLikeTracker extends Tracker {
     }
 
     @Override
-    public void addToShowcaseText(Consumer<Component> consumer, HolderLookup.Provider provider, ItemStack itemStack) {
-        super.addToShowcaseText(consumer, provider, itemStack);
+    public void addShowcaseChildren(Consumer<Component> consumer, HolderLookup.Provider provider, ItemStack itemStack) {
+        super.addShowcaseChildren(consumer, provider, itemStack);
         this.addAdditionalShowcaseLines(consumer, provider, itemStack);
     }
 
