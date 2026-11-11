@@ -27,11 +27,11 @@ public abstract class AbstractArrowMixin {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;ceil(D)I", ordinal = 0), method = "onHitEntity")
-    public void onHitMixin(EntityHitResult entityHitResult, CallbackInfo ci) {
+    public void onHitMixin(EntityHitResult hitResult, CallbackInfo ci) {
         AbstractArrow ppe = (AbstractArrow)(Object) this;
         if (ppe.getOwner() != null) {
             if (ppe.getOwner().getWeaponItem() != null) {
-                Identifier hitEntityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityHitResult.getEntity().getType());
+                Identifier hitEntityId = BuiltInRegistries.ENTITY_TYPE.getKey(hitResult.getEntity().getType());
                 Trigger.ARROW_HIT_MOB.appendWithData(ppe.getOwner().registryAccess(), this.weaponNonCopy, 1, hitEntityId);
             }
         }

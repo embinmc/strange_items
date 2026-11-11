@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FishingRodItem.class)
 public class FishingRodMixin {
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
-    public void reelInRodMixin(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        Trigger.REEL_IN_FISHING_ROD.appendWithDimension(user, user.getItemInHand(hand));
+    public void reelInRodMixin(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        Trigger.REEL_IN_FISHING_ROD.appendWithDimension(player, player.getItemInHand(hand));
     }
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"))
-    public void castRodMixin(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        Trigger.CAST_FISHING_ROD.appendWithDimension(user, user.getItemInHand(hand));
+    public void castRodMixin(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        Trigger.CAST_FISHING_ROD.appendWithDimension(player, player.getItemInHand(hand));
     }
 }

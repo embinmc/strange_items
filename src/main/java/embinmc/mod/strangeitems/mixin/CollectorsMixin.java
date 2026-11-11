@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Hud.class)
 public class CollectorsMixin {
@@ -22,9 +21,9 @@ public class CollectorsMixin {
 			target = "Lnet/minecraft/client/gui/Font;width(Lnet/minecraft/network/chat/FormattedText;)I",
 			shift = At.Shift.BEFORE
 	), method = "extractSelectedItemName")
-	private void adjust_color_for_collectors(GuiGraphicsExtractor context, CallbackInfo ci, @Local(name = "str") MutableComponent mutableText) {
+	private void adjust_color_for_collectors(GuiGraphicsExtractor graphics, CallbackInfo ci, @Local(name = "str") MutableComponent str) {
 		if (StrangeUtil.isCollectors(this.lastToolHighlight)) {
-			mutableText.withStyle(ChatFormatting.DARK_RED);
+			str.withStyle(ChatFormatting.DARK_RED);
 		}
 	}
 }

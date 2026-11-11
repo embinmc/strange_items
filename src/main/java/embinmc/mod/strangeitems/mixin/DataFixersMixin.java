@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DataFixers.class)
 public abstract class DataFixersMixin {
     @Inject(method = "addFixers", at = @At("TAIL"))
-    private static void addDataFixers(DataFixerBuilder fixerUpper, FileFixerUpper.Builder fileFixerUpper, CallbackInfo ci, @Local(name = "v4892") Schema v4892) {
-        fixerUpper.addFixer(new StrangeComponentRemovalFix(v4892));
+    private static void addDataFixers(DataFixerBuilder fixerUpper, FileFixerUpper.Builder fileFixerUpper, CallbackInfo ci, @Local(name = "v4881") Schema v4881) {
+        fixerUpper.addFixer(new StrangeComponentRemovalFix(v4881));
     }
 }

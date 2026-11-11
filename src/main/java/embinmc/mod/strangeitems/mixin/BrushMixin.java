@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BrushItem.class)
 public class BrushMixin {
     @Inject(method = "onUseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V"))
-    public void brushMixin(Level world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci) {
-        Trigger.ATTEMPT_BRUSH_BLOCK.appendWithDimension(user, stack);
+    public void brushMixin(Level level, LivingEntity livingEntity, ItemStack itemStack, int ticksRemaining, CallbackInfo ci) {
+        Trigger.ATTEMPT_BRUSH_BLOCK.appendWithDimension(livingEntity, itemStack);
     }
 }

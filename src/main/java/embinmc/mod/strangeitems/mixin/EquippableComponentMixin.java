@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Equippable.class)
 public class EquippableComponentMixin {
     @Inject(method = "swapWithEquipmentSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"))
-    public void equipMixin(ItemStack stack, Player player, CallbackInfoReturnable<InteractionResult> cir) {
+    public void equipMixin(ItemStack inHand, Player player, CallbackInfoReturnable<InteractionResult> cir) {
         Equippable ec = (Equippable) (Object) this;
-        if (StrangeUtil.canSwap(stack, player.getItemBySlot(ec.slot()), player)) {
+        if (StrangeUtil.canSwap(inHand, player.getItemBySlot(ec.slot()), player)) {
             Identifier swapToId = player.getItemBySlot(ec.slot()).typeHolder().unwrapKey().orElseThrow().identifier();
-            Trigger.EQUIP_ITEM.appendWithData(player.registryAccess(), stack, 1, swapToId);
+            Trigger.EQUIP_ITEM.appendWithData(player.registryAccess(), inHand, 1, swapToId);
         }
     }
 }

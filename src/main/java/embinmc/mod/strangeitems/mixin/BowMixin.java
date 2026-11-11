@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BowMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;awardStat(Lnet/minecraft/stats/Stat;)V"),
         method = "releaseUsing")
-    public void bowMixin(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks, CallbackInfoReturnable<Boolean> cir) {
-        Trigger.SHOOT_ARROW.appendWithDimension(user, stack);
+    public void bowMixin(ItemStack itemStack, Level level, LivingEntity entity, int remainingTime, CallbackInfoReturnable<Boolean> cir) {
+        Trigger.SHOOT_ARROW.appendWithDimension(entity, itemStack);
     }
 }

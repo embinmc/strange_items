@@ -24,7 +24,7 @@ public abstract class FlintAndSteelMixin {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V", ordinal = 0),
         method = "useOn")
-    public void igniteCampfireMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "state") BlockState blockState) {
-        Trigger.RELIGHT_CAMPFIRE.appendWithData(context.getLevel().registryAccess(), context.getItemInHand(), 1, blockState.typeHolder().unwrapKey().orElseThrow().identifier());
+    public void igniteCampfireMixin(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "state") BlockState state) {
+        Trigger.RELIGHT_CAMPFIRE.appendWithData(context.getLevel().registryAccess(), context.getItemInHand(), 1, state.typeHolder().unwrapKey().orElseThrow().identifier());
     }
 }
