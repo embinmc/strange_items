@@ -84,7 +84,7 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
     }
 
     @Override
-    protected void extractListItems(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void extractListItems(@NonNull GuiGraphicsExtractor graphics) {
         if (this.children().isEmpty()) {
             int x = this.getX() + (this.getWidth() / 2);
             int y = this.getY() + (this.getHeight() / 2);
@@ -92,12 +92,12 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
             graphics.textRenderer().accept(TextAlignment.CENTER, x, y, emptyText);
             return;
         }
-        super.extractListItems(graphics, mouseX, mouseY, a);
+        super.extractListItems(graphics);
     }
 
     @Override
-    public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
+    public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor graphics) {
+        super.extractWidgetRenderState(graphics);
         if (!this.checkingStack.isEmpty()) {
             graphics.textRenderer().accept(TextAlignment.LEFT, this.getX(), this.getY() - 12, this.checkingStack.getStyledHoverName());
         }
@@ -128,7 +128,7 @@ public class TrackerListWidget extends ObjectSelectionList<TrackerListWidget.Tra
         }
 
         @Override
-        public void extractContent(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+        public void extractContent(@NonNull GuiGraphicsExtractor graphics, boolean hovered) {
             int yOffset = 1;
             for (Component line : this.lines) {
                 graphics.text(this.font, line, this.getX(), this.getContentY() + yOffset, ARGB.white(1f));
