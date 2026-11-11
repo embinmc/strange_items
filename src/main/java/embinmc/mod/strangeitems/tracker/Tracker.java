@@ -244,7 +244,7 @@ public abstract class Tracker {
         if (dataVersion < StrangeItems.DATA_VERSION && hasCustomData) { // old data version warning
             List<FormattedText> lines = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("tooltip.strangeitems.old_data_version"), 140, Style.EMPTY);
             lines.forEach(line -> {
-                list.add(trackerAddIndex[0], Component.literal(line.getString()).withStyle(ChatFormatting.RED));
+                list.add(trackerAddIndex[0], Component.literal(line.getString(100)).withStyle(ChatFormatting.RED));
                 trackerAddIndex[0] += 1;
             });
         }
