@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -66,18 +67,35 @@ public class IdMapTracker extends MapLikeTracker {
         CompoundTag mapNbt = mapOptional.orElseThrow();
         List<String> sorted = StrangeUtil.getSortedKeys(mapNbt);
         for (String key : sorted) {
-            MutableComponent keyText = this.translationPrefix.isEmpty() ? Component.literal(key) :
-                    Component.literal(this.getTranslationKey(key));
+            Identifier keyId = Identifier.tryParse(key);
+            if (keyId == null) {
+                consumer.accept(Component.literal("Invalid key: \"" + key + "\"").withStyle(ChatFormatting.RED));
+                continue;
+            }
+            final MutableComponent keyText;
+            if (this.translationPrefix.isEmpty()) {
+                keyText = Component.literal(key);
+            } else {
+                if ("item".equals(this.translationPrefix.orElseThrow())) {
+                    Item item = BuiltInRegistries.ITEM.getValue(keyId);
+                    //noinspection ConstantValue
+                    if (item == null) { // it CAN return null
+                        keyText = Component.literal(key);
+                    } else {
+                        keyText = Component.literal(this.getTranslationKey(item.getDescriptionId().startsWith("block") ? "block" : "item", key));
+                    }
+                } else {
+                    keyText = Component.literal(this.getTranslationKey(this.translationPrefix.orElseThrow(), key));
+                }
+            }
             keyText.withStyle(ChatFormatting.GRAY);
             Component value = Component.literal(this.getFormattedValue(mapNbt.getIntOr(key, 0))).withStyle(ChatFormatting.YELLOW);
             consumer.accept(Component.empty().append(PREFIX).append(keyText).append(SEP).append(value));
         }
     }
 
-    protected final String getTranslationKey(String key) {
-        if (this.translationPrefix.isEmpty())
-            return key;
-        String translationKey = this.translationPrefix.orElseThrow() + "." + key
+    protected final String getTranslationKey(String prefix, String key) {
+        String translationKey = prefix + "." + key
                 .replace(Identifier.NAMESPACE_SEPARATOR, '.')
                 .replace('/', '.');
         return Language.getInstance().getOrDefault(translationKey, key);
